@@ -1,59 +1,52 @@
 \documentclass[letterpaper,11pt,leqno]{article}
-
 \usepackage{paper}
-
-\bibliographystyle{bibliography}
+\bibliographystyle{plain}
 
 % PDF metadata and paths
-
 \hypersetup{pdftitle={How Informative are Job Posting Skill Measures? Evidence from Selection Decisions}}
-
-\newcommand{\bib}{references.bib}
 
 \begin{document}
 
 % Title and authors
-
 \title{How Informative are Job Posting Skill Measures? \\ Evidence from Selection Decisions}
-
-\author{Nikhil George \and Ramayya Krishnan \and Rahul Telang \\
-
-\thanks{The authors are at Carnegie Mellon University. We gratefully acknowledge support from the Block Center for Technology and Society at Carnegie Mellon University. We thank our partner firm for their collaboration and valuable data access. We also appreciate the helpful feedback received from conference and seminar participants. The analysis and conclusions presented in this paper are those of the authors.}}
-
+\author{%
+ Nikhil George \and Ramayya Krishnan \and Rahul Telang%
+ \thanks{The authors are at Carnegie Mellon University. We gratefully acknowledge support from the Block Center for Technology and Society at Carnegie Mellon University. We thank our partner firm for their collaboration and valuable data access. We also appreciate the helpful feedback received from conference and seminar participants. The analysis and conclusions presented in this paper are those of the authors.}%
+}
 \date{December 2024}
 
 \begin{titlepage}
-
 \maketitle
 
-Information in job postings plays an increasingly central role in modern labor markets; aside from information for potential employees the content in them is a key part of matching algorithms, screening tools, and broader workforce analytics. This brings up the demand to ascertain how the measures of skills and job requirements built from job postings predict actual selection outcomes. We provide a first validation of the informativeness by predicting selection to internal jobs at a major firm from a measure of skill distance built on job postings. Skill distances built on job postings strongly predict selection - the probability of selection is 84\% higher when the sought job is in the lowest quintile of skill distance compared to a position in the highest distance quintile. And in 70\% of cases the selected candidate is the one with the shortest skill distance. These skill measures consistently outperform traditional employee characteristics in explaining selection. We build on this validation to show how internal application intensity is strongly correlated with average skill distance to emerging opportunities - novel insights relevant to human capital management and research on employee mobility in modern labor markets. Beyond validating posting informativeness through selection outcomes, our analysis reveals rich possibilities for research and analytics leveraging the skill content in job postings.
+Information in job postings plays an increasingly central role in modern labor markets; aside from information for 
+potential employees the content in them is a key part of matching algorithms, screening tools, and broader workforce 
+analytics. This brings up the demand to ascertain how the measures of skills and job requirements built from job postings 
+predict actual selection outcomes. We provide a first validation of the informativeness by predicting selection to internal 
+jobs at a major firm from a measure of skill distance built on job postings. Skill distances built on job postings 
+strongly predict selection - the probability of selection is 84\% higher when the sought job is in the lowest quintile 
+of skill distance compared to a position in the highest distance quintile. And in 70\% of cases the selected candidate 
+is the one with the shortest skill distance. These skill measures consistently outperform traditional employee 
+characteristics in explaining selection. We build on this validation to show how internal application intensity is 
+strongly correlated with average skill distance to emerging opportunities - novel insights relevant to human capital 
+management and research on employee mobility in modern labor markets. Beyond validating posting informativeness through 
+selection outcomes, our analysis reveals rich possibilities for research and analytics leveraging the skill content 
+in job postings.
 
 \end{titlepage}
 
 % Main sections
-
 \input{sections/intro}
-
 \input{sections/research_setting}
-
 \input{sections/objective_approach}
-
 \input{sections/machine_learning_pipeline}
-
 \input{sections/evaluation_skill_distance}
-
 \input{sections/internal_mobility_patterns}
-
 \input{sections/discussion}
 
-\bibliography{\bib}
+\bibliography{references}
 
-\newpage
 \appendix
-
-% Sample Job Description appendix
 \section{Sample Job Description}
-\input{sections/appendix_job.tex}
+\input{sections/appendix_job}
 
-
-\end{document} 
+\end{document}
