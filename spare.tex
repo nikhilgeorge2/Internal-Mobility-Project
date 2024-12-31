@@ -1,0 +1,595 @@
+\documentclass{article}
+\usepackage{booktabs}
+
+\begin{document} 
+
+\subsection{A new measure of skill similarity} 
+
+We are interested in a measure of skill similarity that informs the ability of an employee to transition from one job to the other. Weighting based on textual occurrence patterns of skills do not account for the difficulty in acquiring the skills or the level of preparation a prospective candidate has as conveyed by their current job. We will look at where our distance measure under performs, to explore how they can be re-weighted for a more informative skill distance between jobs.
+
+
+
+
+ As technology changes regularly reshape the work landscape, workforce mobility becomes key to a well-functioning economy, and therefore important for policy and practice. In this paper we develop a workforce supply-chain perspective to identify and assess the scope of skill-building initiatives to speed up workforce mobility in the economy. We use a data-driven method to distill and summarize the skills sought after in each occupation from their respective job postings. Subsequently, we gauge the similarity between two occupations by calculating the cosine similarity of Large Language Model (LLM) embeddings derived from their skill-strings. The similarity measure explains 22\% of the variance in the destinations of workers from a reference occupation, as documented in the CPS during the 2011-2020 decade. We detect a similarity threshold based on discontinuous increase in the mobility-similarity association. We identify a similarity threshold marked by a distinct increase in the association between mobility and similarity. The threshold allows to characterize the traditional (observed) wage-growth paths into those that are above and below it. High similarity paths are deep-dives that build on the starting skill-set and gather deeper expertise or tighter certifications. The lower similarity paths require skill-expansions, acquiring skills that are utilized more broadly across occupations. The qualitative distinction is valuable as the broadening paths are less-formal and provide ground for shared skill-building programs that should facilitate mobility. Amongst 66 occupations with large projected addition to their workforce, there are wage improving, skill-broadening paths from 34 occupations to 25 of them. There are wage improving, skill-broadening paths to 25 occupations with a large projected addition to their workforce from 34 occupations. Skill building programs to enhance mobility to these 25 could unlock similar pathways for workers in as many as 48 additional jobs, traditionally lacking such opportunities. The supply chain view of workforce combines detailed skill data with systematically collected labor market data to bring qualitative characterization and quantitative answers to economy-wide questions on re-skilling and mobility. 
+ 
+
+\subsection{When is the prediction weak ?} 
+
+When the observed transitions between a pair of occupations $(i,j)$ is higher (lower) than the model prediction, it could point to the computed distance underestimating (over estimating) the skill similarity between the pair of occupations. Tables below give 5 cases where the computed similarity under and over predicts respectively. 
+
+\begin{table}[htbp]
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      \textbf{Source } & \textbf{Destination} & \textbf{Similarity} & \textbf{Transitions} \\
+      \hline
+      HR Specialist & HR Manager & 0.86 & 104068 \\
+      General and OM mgr & Chief Exec. & 0.81 & 90449 \\
+      Food Service Managers & Chefs & 0.87 & 24595 \\
+      Customer Serv.Rep. & Audit \& A. clerk & 0.34 & 29245 \\
+      Retail salespersons & Office clerks & 0.37 & 34472 \\
+      \hline
+    \end{tabular}
+    \caption{Transitions under predicted }
+    \label{table: }
+  \end{minipage}
+
+  \vspace{1cm} % Adjust the vertical spacing between tables
+
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      \textbf{Source } & \textbf{Destination} & \textbf{Similarity} & \textbf{Transitions}  \\
+      \hline
+      Op. research analysts & Event planners & 0.49 & 945 \\
+     Mkt research anal. & Fin. anal. & 0.48 & 212 \\
+     Event planner & Property mgr& 0.49 & 1111 \\
+     Insurance agent & Accountant  & 0.17 & 1298 \\
+     Lodging mgr. & Retail salesperson & 0.48 & 1421 \\
+      \hline
+    \end{tabular}
+    \caption{Transitions over predicted}
+    \label{table:table2}
+  \end{minipage}
+\end{table}
+
+
+
+\begin{equation}
+\begin{split}
+T_{o,p} & = \alpha + \gamma_{1}\log(X_i) + \gamma_{2}\log(X_j) + \sum_{n \in \{l,m,h\}} \eta_n\mathbb{I}(W_{i,j}^n) \\
+&\phantom{{}=} + \sum_{k=1}^{10} \beta_k\mathbb{I}(S_{i,j}^k) + \epsilon_{i,j}
+\end{split}
+\end{equation}
+
+we these factors would account for notable variation in the observed transitions and easily obtained they are included in the above regression.  $W_{i/j}$ is the 75th percentile value of the advertised salaries within an occupation in our sample of job descriptions obtained from Lightcast. $\mathbb{I}(W_{i,j}^n)$ is an indicator function for whether $W_j - W_i$ falls in the lowest third, middle third or highest third.
+
+
+
+
+
+The resume dataset provided by Lightcast is largely representative of the U.S. labor force in its distribution by gender and location. The titles are then mapped to SOC 6-digit occupational codes\footnote{An occupational SOC code is a standardized numerical code assigned to specific job roles by the U.S. Bureau of Labor Statistics to categorize and classify various occupations based on their duties and responsibilities.} 
+
+informativeness of want to validate the inforativeness of 
+
+To illustrate the informative content in skill-similarity measures obtained from job postings and its capacity to elucidate observed inter-job transitions, we leverage data on occupational mobility within the United States, as documented in the associated paper's dataset \autocite{schubert2022employer}. This dataset, compiled from 16 million resumes, traces alterations in job titles during the 2002-2018 period. The resulting dataset furnishes an occupational transition matrix, containing estimations of transition counts between any two SOC 6-digit occupations. This matrix approximates the likelihood that a worker will transition to occupation $p$ upon leaving occupation $o$.
+
+
+
+
+
+
+We introduce a new measure of occupational skill similarity derived from online job vacancy postings—a rich and high-frequency source of labor market data, encompassing skills and salaries. Skill vectors are constructed for detailed occupations identified by their respective SOC codes. This imputed inter-occupational skill similarity measure is then applied to analyze mobility trends in CPS data spanning a decade. Our similarity measure effectively captures substantial variations in inter-occupational mobility. We describe how they can be used by firms and policy institutions involved in workforce development a fresh perspective for assessing the feasibility of targeted skill-development programs.
+
+
+
+
+\section{Career Prospects and Mobility}
+
+\subsection{Career Prospects}
+
+Workers' value from jobs at time $t$ extends beyond the immediate payoff (salary) received during $t$. The skills and expertise acquired at a job has a significant impact on future payoffs. This can improve productivity in the current job which can elevate future salary or the ability to continue in the current occupation. Or, the acquired skills can facilitate transitions to higher-paying occupations. For instance, working as a software developer offers a competitive salary, skills gained allows the worker to continue in the occupation in a future period and also move to an adjacent occupation like an IT project manager, or data scientist. In short, along with the current payoff, future potential is a key factor in job decisions. Since we can identify neighboring occupations, which in turn account for a large portion of occupational movement, we can compute career prospects, a forward looking measure that summarizes the payoff from an occupation. 
+
+For an occupation $o$, let $N_o$ be the set of neighboring occupations - which account for the majority of outflow from an occupation. We use the occupational similarity measure to define $N_o = \{ n \mid S(n, o) < c \} \cup \{ o \}$. We define the career prospects for occupation $o$ in the following manner:
+
+\begin{equation}
+c_o = w_o + \delta \sum_{n \in N_o} g_n \cdot c_n
+\end{equation}
+
+Here $w_o$ is the mean wage in occupation $o$ and accounts for the current payoff of working in $o$. $\delta$ is a parameter that discounts the expected future payoffs from working in $o$. The future payoffs are written as a weighted average of the career prospects from occupations in $N_o$. With slight modification, we can express the career prospects for our list of occupations as follows:
+
+\begin{equation}\label{eq:matrixform}
+C = W + \delta \cdot G \cdot C
+\end{equation}
+
+$C$ and $W$ are $(m*1)$ column vectors and $G$ is a $(m*m)$ matrix; where $m$ is the number of occupations considered. The non-neighbors in a row will have weight $0$. To compute $C = (I - \delta \cdot G)^{-1} \cdot W$, we need values for $W$ and $G$. We observe $W$, the mean wages for different occupations. We need $G$ a weighting scheme to compute expected future prospects. Transition probabilities from occupation $o$ to the occupations in its neighborhood set will provide weights for the computation. Since we do not observe the transition probabilities, 
+
+
+
+The future an expectation of the wage in  For each neighboring occupation ($n$), we have a summary statistic for the salaries at time $t$ ($w_{nt}$), allowing us to account for potential earnings not just from the current occupation ($o$) but also from occupations that a worker can transition to. We also know the stock of people employed in each occupation and the number of vacancies. Let $e_{ot}$ and $v_{ot}$ represent the standardized scores for an occupation's workforce and vacancies, at time $t$. By calculating the ratio ($\frac{e_{ot}}{v_{ot}}$) of vacancies to workforce, we can determine whether the vacancy postings are proportional to the workforce. A value greater (less) than 1 indicates that the opportunities in the occupation are on an upswing (downswing). We measure the career prospect of an occupation ($P_{o,t}$) as a combination of these factors. $\beta \in (0, 1)$ is a parameter which discounts the earning potential in the neighboring occupations and $|N_o|$ the number of neighboring occupations. 
+
+
+
+We tap a rich and comprehensive dataset to obtain measures of occupational skill-similarity and empirically document a strong correlation between skill-similarity and inter-occupational mobility. 
+
+The paper's primary objective is to develop a measure of the interconnectedness of occupations in terms of skills, as they exist on ground. While doing that, the paper also contributes by demonstrating the advantages of integrating LLMs in the data processing pipeline. 
+
+
+
+
+\begin{equation}
+P_{o,t} = \left(\frac{v_{o,t}}{e_{o,t}} \cdot w_{o,t} + \beta \cdot \sum_{n \in N_o}\frac{v_{n,t}}{e_{n,t}} \cdot w_{n,t}\right) \cdot \frac{1}{|N_o|+1}
+\end{equation}
+
+$P_{o,t}$ gives a dollar value of career prospects for occupation $o$ at time $t$, which incorporates information from vacancies and the earnings potential from neighbor occupations. Our vacancy data for occupations come from the listings provided by Lightcast and estimates on the workforce size and salary are occupation level estimates for May 2022, provided by the Bureau of Labor Statistics. This leaves the question of choosing two parameters, the skill similarity threshold that will determine the set of neighboring occupations and $\beta$ the discounting to be applied for the earnings potential in the neighbor occupations. 
+
+
+
+
+The data available comprises text descriptions of jobs and information on internal mobility decisions. Below we discuss the informational content in the data in a decision-making framework. Let $J$ be the set comprising job descriptions (discussed previously). As a first step, we discuss the evaluation of a single internal applicant against a position. Let $j_b$ be the job description of the sought position -- a text document that lists the competencies required for the job, along with other relevant information. In our model, a job is characterized by a competency vector $X \in \mathbb{R}^l$ drawn from a fixed distribution over $X$. The decision-maker (say, the hiring manager) maps $j_s$ to $X_s$. Here $l = \dim(X)$ is the count of all competencies required by positions in $J$. The hiring manager then turns to determine the competency vector of the applying candidate. The manager makes an assessment based on the applicant's current job - $j_c$ and what is learned in a direct assessment, say through an interview. Let the competency vector of the applicant so assessed be $X_c'$, where $X_c' = f(X_c, Z)$ some function of the competency vector of their current job ($X_c$) and what is observed in the interview ($Z$). The decision maker computes a distance $d(X_s, X_c')$ between the sought job and the assessed competency vector. The applicant is offered the position when the distance is less than some threshold $\tau$. We can express the decision as follows:
+
+\[
+S(j_s, (j_c, Z)) = 
+\begin{cases} 
+1, & \text{if } d(X_s, X_c') < \tau \\
+0, & \text{if } d(X_s, X_c') \geq \tau
+\end{cases}
+\]
+
+The decision regarding the applicant seeking position $j_s$ and currently working in $j_c$ is illustrated in Figure below. When there are multiple internal applicants, the offer is made to the candidate assessed to have the lowest competency distance to the job. The analyst's task is to approximate the competency distance of an internal candidate, given the sought job description. They have access to $J$ the corpus and $D: \{(j_s, j_c, S)\}$ the set comprising past decisions (selection data). Note here that the analyst observes the sought and current job descriptions, but not $Z$, which was available to the decision maker. The analyst observes $S$ the selection decision, but not all inputs that went into the decision.
+
+
+With the goal to approximate \(d(X_s, X_c')\), a machine learning task is to learn a function that maps a job description text to a competency vector \((r: J \rightarrow \hat{X} \in \mathbb{R}^l)\) \footnote{The following is a more accurate notation \( r: J \rightarrow \hat{X} \subseteq \mathbb{R}^{l'} \). Here \( \mathbb{R}^{l'} \) conveys that the dimension of \( \hat{X} \) is picked as part of the empirical analysis (training) and is different from \( \dim(X) = l \).}. For a given new position \(j_s\) and an internal applicant working in job \(j_c\), the learnt function allows to obtain \(\hat{X}_s, \hat{X}_c\), stand-ins for the true competency vectors. The arguments in the decision maker's distance function use \((X_s, X_c')\); using \((\hat{X}_s, \hat{X}_c)\) instead brings two types of errors. The first may be thought of as measurement error in obtaining \(\hat{X}\) from the job description text. The second source of error is due to factors unobservable to the analyst. While the decision maker has access to additional information, the current job's competencies \(X_c\), form a key part of the information in \(X_c'\), the candidate's competency vector as assessed by the firm. 
+
+This brings us to learn a distance function \(\hat{d}: \mathbb{R}^l \times \mathbb{R}^l \rightarrow \mathbb{R}_{\geq 0}\). While a standard distance metric can be used to compute the distance between \((X_s, X_c)\), the setting provides valuable information that can be utilized. We have the set \(D\) comprising past decisions. Let \(D^0, D^1\) be the sub-sets of \(D\) where the former comprises cases of rejection \((S = 0)\) and the latter comprises cases of selection \((S = 1)\) \footnote{Here \(D^0 \subseteq D|(j_s, j_c, S = 0)\) and \(D^1 \subseteq D|(j_s, j_c, S = 1)\).}. Instead of relying on a metric that equally weighs all features, we can learn a distance function that assigns weights such that the distance computed for the cases in \(D^0\) where the applicant was rejected is higher than the distance computed for cases in \(D^1\). A suitable optimization problem can be formed to learn the distance function. As we work with  and not the true competency vectors, the gains from learning a distance function from data (compared to using a standard metric) must be validated before adoption. We will validate the gains from learning a distance function over using a standard distance, before adoption. 
+
+
+With the distance function and empirical counterparts for the feature vectors in place, we know from the setup that the probability of selection \(P_{S=1}\) is a decreasing two-step function of \(\hat{d}(\cdot)\) (see part A in Figure below). As the analyst, we would like \(P_{S=1}\) to be a decreasing function in \(\hat{d}(\cdot)\) -- our approximation (like illustrated in part B of figure 3 below). The figure illustrates the gains from the ability to compute \(\hat{d}(\cdot)\). Before computing the distance measure, the firm had a single estimate for \(P_{S=1}\), say the proportion of applications that resulted in selections (indicated by the horizontal grey line in figure 3B). With held out data we can now estimate \(P_{S=1}(\hat{d})\) -- an empirical distribution of the probability of selection, based on observables -- \(j_s\) and \(j_c\).
+
+
+For the analyst, the success of the exercise to approximate \(d(\cdot)\) is illustrated by the range of \(P_{S=1}(\hat{d})\) (indicated in \autoref{fig:idea} B by the grey right bracket). If the estimated distribution is flat, then the information contained in job descriptions is either inadequate (the selection is largely based on unobserved factors) or is not captured effectively in \(\hat{d}(\cdot)\) (high measurement error). However, if it is decreasing as illustrated by the black dashed line, then the exercise is of value. It indicates that the observable signal in the selection decision can be captured by the empirical apparatus in place.
+
+
+
+
+
+
+
+It is useful to reiterate the role of selection data (set $D$) available here to the analyst. This information is not used to learn the vector representation of job descriptions. Which means we can approximate distances between job descriptions (say, using a standard metric) without using the selection data. However, the predictive value of the signal $(\hat{X_c})$ contained in the applicant’s current job description can be validated only by linking the distance measure to selection data. In sum, the machine learning apparatus computes a distance from observed data, which in-turn is mapped to a probability of selection conditional on applying.
+
+
+While we can extract valuable information that predicts selection, we can't make much progress on analyzing selection decisions. If the setting provided more information -- additional features of applicants or post selection performance of (selected) applicants, it would open opportunities to study firm’s selection decisions. However, the competency distance (approximated here) is also a key factor in an employee’s application decision. It is safe to assume that employees seeking new positions make a dynamic choice, factoring in their expectations about future opportunities, the cost of acquiring new competencies and the probability of selection, on applying. Applicant working in job \( j_c \) assess their probability of selection based on the requirements listed in \( j_s \). Let \( d_c(j_s, j_c) \) be the applicant’s assessment of their distance to \( j_s \). We assume the applicant’s assessment \( (d_c(j_s, j_c)) \) is correlated with \( \hat{d}(\hat{X}_s, \hat{X}_c) \) -- the competency distance approximated by the analyst.
+
+Note that \( \hat{d}(\hat{X}_s, \hat{X}_c) \)’s ability to assess fit is validated, the correlation assumption allows the analyst to assess applicants’ choices using the approximated competency distance. The core of the assumption is rather innocuous -- that the applicant has skill in ranking their fit to different positions available. The analyst observes the applicant’s choice \( j_s \), and their choice set \( C \) -- which comprises the descriptions of contemporaneous listings in the firm. They can assess the applicant’s choice set -- rank order the constituent jobs by predicted probability of selection. The assumption conveys that, the applicant’s assessment (rank-ordered) which is unobserved, is consistent with analyst’s ordering based on \( \hat{d}(\cdot) \). For example, when the applicant is observed applying to a position with low probability of selection over others with better chance of success, we assume this ordering to be consistent with the applicant’s own assessment and not a choice due to an erroneous assessment. Note that the assumption extends only to the applicant’s assessment and not to their choice. The framework respects unobservable factors in both selection and application decisions and do not impute outcomes. Observed selection decisions are used in computing \( P_{S=1}(\hat{d}) \). An internal applicant’s (observed) choice is evaluated against this validated estimate.
+
+
+\subsection{Career Prospects and Mobility}
+
+
+
+We highlight the absence of skill pathways that link  prominent occupations in the bottom quintile, to in-demand and high salary occupations, which suggest an important role for external skill training programs to help worker mobility to higher salary occupations. 
+
+
+\\
+IDF(s) &= \log \frac{|O|}{|\{o \mid s \in o\}|}
+
+
+
+\begin{table}
+\centering
+\begin{tabular}{l|l}
+\toprule
+\multicolumn{1}{c}{\textbf{Salary Data}} & \multicolumn{1}{c}{\textbf{Summary}} \\
+\midrule
+Avg. salary by Occupation - Median & 60110 \\
+Avg. salary by Occupation - 75p. & 860865\\
+Highest & Cardiologists (421330) \\
+Lowest & Cooks, Fast Food (27920) \\
+\bottomrule
+\end{tabular}
+\caption{Descriptive Summary - Mean Salary by Occupation}
+\label{table:salary}
+\end{table}
+
+
+
+
+
+
+
+\begin{table}[htbp]
+\centering
+\caption{Regression Results}
+\begin{tabular}{lcccccc}
+\toprule
+Variable & Coef. & Std. Err. & t & P$>|t|$ & [95\% Conf. & Interval] \\
+\midrule
+trans\_share & & & & & & \\
+cos & -3.737 & 0.086 & -43.55 & 0.000 & -3.905 & -3.568 \\
+cos\_squared & 2.358 & 0.051 & 45.80 & 0.000 & 2.257 & 2.458 \\
+cos\_to\_high & -0.000 & 0.000 & -0.28 & 0.780 & -0.001 & 0.000 \\
+cos\_to\_low & 0.000 & 0.000 & 1.37 & 0.172 & -0.000 & 0.001 \\
+\_cons & 1.482 & 0.036 & 41.49 & 0.000 & 1.412 & 1.552 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+
+\subsection{A Model of Job Descriptions}
+
+We first take up the practical task of learning \( r: J \rightarrow \hat{X} \), the function that maps a job description to its (approximate) competency vector. Henceforth, we use the term competency vector to refer to the approximation \( \hat{X} \), unless specified explicitly. A job description \( j \) is a text document that describes tasks to be performed on the job and the technical skills (if any) required to perform them. In our setting, the average job description is about 550 words. Our objective is to capture the most important informational content in the text, the competencies required of an employee working in that position. We describe here a simple model of job description.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{ML.png} % Adjust the scale as necessary
+    \caption{A. Illustration of the model of job description. B. Illustration of the constituent algorithms that convert a job description to a competency vector.} % Replace with your actual caption
+    \label{fig:ML} 
+\end{figure}
+
+
+
+We model the tasks listed in a job description as being primarily associated with a function. We assess from a supplementary dataset that a high fraction of employees self-report their functional role as belonging to one of ‘developer’, ‘tester’, ‘support’. These are well known roles in any IT division. In a job \( j \), the envisaged role could be a mix of these functions and the tasks featured in it generated accordingly. Technical skills form the other significant part of a job description. In our model, the technical skills listed in a job description are generated by latent technical competencies. For clarity, take the case where a job requires the employee to be competent in ‘web-frameworks’. This requirement may be represented in \( j \) by words like ‘web framework’, ‘Spring’, ‘MVC’ etc. Unlike in the functional case, we leave the competencies as latent and look to learn it form the data. In summary, the key information in a job description is generated by two distributions-- the first a mixture over the three functional roles that determines the tasks and responsibilities described; the second a mixture over \( k \) latent technical competencies that determine the technical skills. We illustrate the model in \autoref{fig:ML}.
+
+
+The model brings us two advantages. It facilitates our need to map the lengthy text to a vector of small dimension. Inferring the underlying functional and technical competency mixtures in $j$ allows us to represent this information in a vector ($\hat{X}$, the competency vector) whose dimension is smaller than the length of text. The model also allows us to incorporate our knowledge of the content and structure of IT job descriptions into the process that learns the competency vector. This brings up the discussion on inference algorithms. Algorithms that will learn from the corpus, some global characteristics that allows us to elicit the latent features—functional distribution and technical competencies from each individual job description. In the following discussion we reverse the order and first discuss inferring technical competencies before discussing the algorithm to obtain the functional distribution from tasks and responsibilities.
+
+
+\subsection*{Topic Modeling (LDA)}
+
+While we have a conceptual idea that skill words in a job description are determined by a distribution over a latent set of competencies, to infer this distribution from a job description we require a fully specified probability model of how they are generated. The LDA (Latent Dirichlet Allocation) algorithm \autocite{Blei2003} is an inference algorithm based on a probability model for word generation in a document. In LDA, the words that constitute a document is determined by the underlying topics covered in the document. In our context, the job listing is the document and the technology skills listed in them the words. Given a sufficiently large corpus of job descriptions, the LDA algorithm allows to estimate a topic mixture (distribution) for each listing.
+
+The LDA algorithm assumes the following model of how the documents are generated\footnote{As the algorithm’s model and inference is well elucidated in \autocite{Blei2003} our explanation is brief.}. Any job \( j \in J \) can be represented as a mixture of \( k \) topics. All skill related keywords in the corpus \( J \) come from a fixed corpus of size \( v \), the cardinality of the vocabulary. Make \( k \) draws from the Dirichlet distribution parameterized by \( \beta_v \), where \( \dim(\beta_v) = v \). Each of these draws give a Multinomial distribution with parameter vector \( \phi_{z} \), where \( \dim(\phi_{z}) = k \). Each of these distributions correspond to word distributions (skill words) for each topic (competency). A job requirement \( j \), is generated with a draw from a second Dirichlet distribution. This distribution is parameterized by \( \alpha_k \), where \( \dim(\alpha_k) = k \). The draw from this, gives a Multinomial distribution with parameter vector \( \theta \), which corresponds to the competency distribution in the document. Recall that the \( k \) draws have already provided the skill word distributions for each competency.
+
+Each skill word \( s \) in \( j \) is generated as follows:
+\begin{itemize}
+    \item Draw a competency \( z \), according to \( \theta \); \( z \sim \text{Mult}(\theta) \)
+    \item Draw a skill word \( s \), according to \( \phi_{z} \); \( s \sim \text{Mult}(\phi_{z}) \)
+\end{itemize}
+
+The training of the model involves estimating corpus level parameters. These include the \( \alpha_k \), the Dirichlet that determines the competency mixtures in each job, and \( \phi_{z} \), which represents the $k$ draws from \( \text{Dir}(\beta_v) \). A desirable \( \alpha_k \) would mean job descriptions are a mixture of few (2-3) competencies rather than several, which would make distinguishing jobs by this representation hard. With the corpus level parameters estimated, given \(\{s_3\}\), the technical skills in \( j \), we can obtain an estimate for \( \theta \) the underlying competency distribution.
+
+The model was trained using \href{https://radimrehurek.com/gensim/}{Gensim}, a popular open-source library for natural language processing in Python. The practical aspects in our setting include drawing a list of technical keywords to extract the skill related words from each \( j \) in our corpus\footnote{We parsed the section of job description that listed the key technical skills required by the job and extracted the nouns in them using a dependency parser. The set of extracted nouns from all descriptions in the job description corpus formed the core of our list of technical keywords.}. The list comprised \( v = 287 \) words \footnote{The list was then adjusted to handle quirks in how these keywords are expressed in job descriptions – for example `Javascript’ and `Java Script’ or `Linux/Unix’ and `Unix/Linux’ convey the same skill.}. To train an LDA model we need to specify \( k \), the count of latent competencies. We pick \( k = 14 \). The key evaluation of the LDA model is inspection. The ability of the model to learn meaningful latent topics. We present the 5-6 highest probability skill words associated with each competency, in \autoref{tab:keywords}. We have assigned a name to each topic for convenience.
+
+
+\begin{table}[htbp]
+\centering
+\caption{Topic and Keyword Distribution Across Various IT Roles}
+\label{tab:keywords}
+\begin{tabular}{@{}>{\small}cll@{}} % Smaller font for the first column
+\toprule
+\textbf{Topic} & \textbf{Topic -- Keyword Distribution} & \textbf{Assigned Name} \\
+\midrule
+1 & Java, Spring, Webservices, WebSphere, SQL, J2ee, ... & Java-Webservices \\
+2 & Hadoop, Hive, Spark, Scala, Python, Scoop, Cloudera, ... & Hadoop developer \\
+3 & Python, Java, Quartz, Multi-threading, Linux/Unix, ... & Python developer \\
+4 & SQL, ASP.net, MVC, WCF, Webservices, C\#, ... & .Net - Webservices \\
+5 & Linux/Unix, Python, Java, C++, Perl, Devops, ... & Devops \\
+6 & DB2, Mainframe, JCL, COBOL, CICS, VSAM, ... & Mainframe \\
+7 & SOAP, Webservices, Mule, REST, Json, XML, ... & API Handling \\
+8 & Pega, PRPC, RPA, CI/CD, Openspan, SOAP, ... & Process Automation \\
+9 & SQL, Oracle, Linux/Unix, Informatica, Teradata, ... & Database - ETL \\
+10 & Excel, SharePoint, Incident, ITIL, Management tools, ... & Management \\
+11 & Java, J2ee, Spring, SQL, Hibernate, Oracle, ... & Java \\
+12 & Linux/Unix, SQL, Windows, Java, Shell, Oracle, ... & Sys. Admin \\
+13 & Testing, Selenium, QA, QC, UFT, Cucumber, ... & Testing \\
+14 & Javascript, HTML, Angular, JQuery, AJAX, CSS, ... & Front End - JS \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+\subsection*{Screening for words that predict functional roles}
+
+We can now obtain a 14-dimensional vector from \(\{s\}\) the skill words in \(j\). We turn attention to the task words in a job description. As discussed earlier, we will follow a slightly different approach to summarize the functional role described in \(j\), leveraging on our contextual knowledge. IT jobs may be readily classified into one of the following three functional roles -- developer, support and testing; roles with distinguishing tasks. In a large firm with projects at different stages of their lifecycle, some roles are likely to be a mixture of the three roles. Our goal is to infer this mixture from \(j\). Our approach is based on the observation that, for a subset of job descriptions- \(J' \subset J\), one of the phrases `developer role', `tester role', `support role' is included within the first line of \(j\). The phrase is easy to detect and conveys a clear indication of \(j\)'s envisaged functional role.
+
+From \(J'\), we can isolate words that are most associated with tasks and responsibilities related to the three canonical functional roles. The procedure is intuitive. Let \(D, S, T\) be non-overlapping subsets of \(J'\), where the elements in \(D\) are job descriptions with the text label developer (role); \(S\) and \(T\) are analogously defined subsets. For all non-skill words \(w \in J'\) we compute \(f_D^w = \frac{|\{\text{jobs with \(w\) in \(D\)}\}|}{|D|}\), the proportion of developer jobs containing \(w\). Similarly, the proportion of support and test jobs containing \(w\) is computed. We now have a triplet \([f_w^D, f_w^S, f_w^T]\) for all \(w \in J'\). With the proportions computed for all terms, we need to select words with the ability to predict the three functional roles. Set an upper and lower threshold \(\alpha_u, \alpha_l\) for picking out words that needs to be included in the (non-overlapping) sets \(\Tilde{D}, \Tilde{S}, \Tilde{T}\). The sets comprise words that predict the functional roles of developer, support and testing respectively. A task word that occurs in a large proportion of developer jobs and in a low proportion of support and testing jobs is included in \(\Tilde{D}\)\footnote{The sets $\Tilde{D}$, $\Tilde{S}$, $\Tilde{T}$ are enumerated in Appendix}.
+
+
+\[
+\Tilde{D} = \{w : f_w^D > \alpha^u \land f_w^S < \alpha^l \land f_w^T < \alpha^l\}
+\]
+
+
+The sets \(\Tilde{S}\) and \(\Tilde{T}\) are composed analogously to \(\Tilde{D}\). The upper and lower thresholds, like the number of latent competencies \(k\) are hyper-parameters that need to be tuned. Our method of isolating the terms is adapted to the context from the idea of marginal screening, a method to select variables in a high dimensional setting \autocite{Fan2007}. \(f_D^w\) is a measure of the strength of association between a word and the functional role of developer. This allows us to ignore words without predictive signal about the job’s functional role. The approach is also similar to the idea of TF-IDF (from the information retrieval literature -- where words appearing frequently in several documents are down-weighed).
+
+Now \(V \subseteq J\) we can extract the words belonging to \(\bar{D}\), \(\bar{S}\) and \(\bar{T}\) to compute their respective proportions in \(j\). We now have a mapping from \(j\) to a triplet that can be interpreted as a probability distribution over the three functional roles of interest\footnote{In forming the triplet, all screened terms are assigned the same weight here. As we are in a super-vised setting, we can learn a weighting for how the isolated term predicts the different roles, which could improve the representation.}. Our approach which relies only on words, discards the informational content in the structure and construction of the text in \(j\). We additionally discard words without predictive signal for the function. With this, we gain simplicity and the ability to use our knowledge of IT jobs and set up a supervised screening of words. The approach can be adapted to extract key information encoded in job descriptions based on other useful criteria like supervision and management responsibilities if relevant label can be extracted easily from a subset of \(J\). With the two algorithms, we now have our function \(r: j \rightarrow \hat{X}\) that can map a job description to a competency vector of 17-dimensions. The first 14 dimensions contain information on the technical competency distribution, while the last three dimensions contain information on the functional distribution indicated by the tasks and responsibilities listed in \(j\). Like we have a ready interpretation for the first 14 dimensions (see \autoref{tab:keywords}), the last three dimensions too have a ready interpretation as [developer, test, support].
+
+
+
+\subsection{Distance Function Learning}
+
+We now come to the second of the machine learning tasks. We need a distance function, given a pair of competency vectors -- \( \hat{X}_S, \hat{X}_C \), which in-turn is predictive of whether the internal applicant would be selected on applying. With the vectors available, we can use one of many standard distance functions including Cosine distance or the Euclidean distance. However, as briefly discussed in the framework section, with set \(D: (\{j_S, j_C, S\})\) comprising selection decisions available we can leverage it to learn a distance function between competency vectors. The case for learning a custom distance function is that the standard measures assign equal weight to all the features when computing the distance. Mismatches on important features should contribute more to the distance than mismatches on less important features. As the features are inferred from text, they are determined by \textit{co-occurrence} patterns of words. We want the competency distance to capture the difference in job related competencies and not merely the semantic difference, which determines the competency vectors \( \hat{X}_S \) and \( \hat{X}_C \).
+
+Recall sets \(D^0, D^1\) partitions of \(D\) where the former comprises cases of rejection and the latter comprises cases of selection. The true distance between sought job and candidate (as assessed) are higher in \(D^0\) compared to cases in \(D^1\). We abuse notation and from now refer to \(D^0, D^1\) as sets where \(j_S, j_C\) from the original are replaced by \( \hat{X}_S, \hat{X}_C \) their respective competency vectors. Our goal is to learn a distance function \( \hat{d} \) such that most distances computed on cases in \(D^0\) is larger than the distances computed on cases in \(D^1\). We need to convert this idea to a suitable objective function. The optimization problem solved in Xing, et al. (2002) can be adopted to the problem. Verbally, the objective function is as follows: maximize the sum of distances in \(D^0\), under the constraint that sum of squared distances between the pairs in \(D^1\) is less than some constant \(c\). Our idea of a distance function which will return greater distances for cases in \(D^0\) is satisfied here. We state it more formally below.
+
+
+The goal is to learn a distance metric of the form
+\[
+\hat{d}(\hat{X}_S, \hat{X}_C) = \sqrt{(\hat{X}_S - \hat{X}_C)^T M (\hat{X}_S - \hat{X}_C)}
+\]
+The distance is referred to as the \textit{Mahalanobis distance} and \(M \in S_+^d\) is a symmetric positive definite matrix. It is equivalent to Euclidean distance after linear projection \(\hat{d}(\hat{X}_S, \hat{X}_C) = \sqrt{(\hat{X}_S - L\hat{X}_C)^T(\hat{X}_S - L\hat{X}_C)}\)\footnote{$L$ is the lower triangular matrix with positive diagonal entries. We can obtain an estimate for $L$ by the Cholesky decomposition of $M$.}. Our objective function is expressed as follows:
+\[
+\max_{M \in S_+^d} \sum_{(\hat{X}_S, \hat{X}_C) \in D^0} \hat{d}(\hat{X}_S, \hat{X}_C)
+\]
+subject to
+\[
+\sum_{(\hat{X}_S, \hat{X}_C) \in D^1} \hat{d}(\hat{X}_S, \hat{X}_C) \leq 1
+\]
+Note that if \(M\) is an identity matrix, the distance would then simply be the Euclidean metric. If \(M\) is restricted to be a diagonal matrix, then it is a re-weighting of the axes. The PSD constraint ensures that \(\hat{d}(\cdot)\) is non-negative and triangle inequality holds. Details of the information on the algorithm to solve the problem can be found in the original paper \autocite{Xing2002}. In our data we have 726 and 590 elements in sets \(D^0\) and \(D^1\) respectively. We take an 80\% random sample to estimate \(M\). The optimization problem is solved using the algorithm’s implementation available in Scikit-learn, a popular and free library of machine learning algorithms in Python. With the matrix \(M\) available, we can compute the distance between two competency vectors weighted based on the selection decisions in the firm.
+
+
+\subsection{Validation}
+
+
+The machine learning pipeline is now in place. We can map a job description \( j \) to its competency vector \( \hat{X} \) and have a distance function \( \hat{d}(\cdot) \) to evaluate distance between competency vectors. Note that our interest is the ability of the distance measure to predict probability of selection \( P_{S=1} \). In the sub-section we will take up two tasks. We first verify whether \( \hat{d}(\cdot) \) has valuable signal of \( P_{S=1} \), the primary objective of our machine learning apparatus. Then verify whether our choices in learning the competency vector \( \hat{X} \) and \( \hat{d}(\cdot) \) brought predictive gains. Specifically, we will check whether including information on the functional role and whether learning a custom distance function brings predictive gains.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.65\linewidth]{keyplot.png} % Adjust the scale as necessary
+    \caption{The plot shows the probability of selection (on applying), by quintile bins of competency distance to the sought job. The horizontal grey dashed line is the average probability of selection for the full sample. Estimates computed on the validation set.} % Replace with your actual caption
+    \label{fig:prob_corr} 
+\end{figure}
+
+
+Recall from the framework, that our objective is to extract information from \( j_c \), the applicant’s current job which can predict their probability of selection (on applying) to the sought job. If our exercise gives a positive range of values for \( P_{S=1}(\hat{d}) \) (the estimated probability of selection, given competency distance) then the exercise is fruitful. On a held-out validation set \( V: \{(\hat{X}_S, \hat{X}_C, S)\} \) with 254 observations we compute \( P_{S=1}(\hat{d}) \). We divide the competency distance values for cases in \( V \) into quintiles and compute \( P_{S=1} \) for each quintile. The results are presented in \autoref{fig:prob_corr}. Note that the probability of selection is 0.66 in the first quintile and 0.3 in the last quintile. In other words, our machine learning pipeline can capture valuable signal that can predict probability of selection. In the absence of the ability to compute competency distances from job description texts, the analyst resorts to modeling selection as a Bernoulli variable to obtain an estimate of selection probability, which here is 0.4.
+
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.6\linewidth]{AUC_!.png} % Adjust the scale as necessary
+    \caption{ROC Curve: Predicting selection of an internal applicant, conditional on applying} % Replace with your actual caption
+    \label{fig:AUC1} 
+\end{figure}
+
+
+
+Another test popular in machine learning for assessing the accuracy of a binary classifier is the Area Under the Curve (AUC)\footnote{An AUC score is the area under the Receiver Operating Characteristic (ROC) curve, which is a plot of the performance (true positive rate -TPR and false positive rate -FPR) of a binary classifier at all classification thresholds. The ROC may be thought of as a frontier and movement along it results in trading off either true positive rate or false positive rate.}. We can evaluate the potential of \(\hat{d}(\hat{X}_S, \hat{X}_C)\) to classify whether an applicant is selected or not given \((j_S, j_C)\). We compute the AUC curve on the cases in \(V\), which is presented in Figure ZZ below. It returns an AUC score of 0.69. The AUC score is a U-statistic and can be interpreted in the following manner. Let \(V^0\), \(V^1\) be the sub-sets of \(V\) where the former comprises cases of rejection (\(S = 0\)) and the latter comprises cases of selection (\(S = 1\)). The AUC score is the probability that \(\hat{d}(\cdot)\) computed on a case drawn at random one from \(V^1\) will (correctly) return a smaller value than the \(\hat{d}(\cdot)\) computed on a case drawn at random from \(V^0\)\footnote{So an AUC score of 0.5 communicates a classifier with no predictive ability and score of 1 indicates perfect classification ability.}.
+
+In computing the AUC, our objective is to communicate the predictive ability of \(\hat{d}(\cdot)\) in a manner that is widely used and well understood. 0.69 is not a high AUC value for a binary classifier that is used in practice. However, recall that our use of \(\hat{d}(\cdot)\) is not to make selection decisions, but simply to predict selection decisions from the observables at hand. AUC scores reported in the literature rarely have this objective. \autocite{Li2022} predict whether a candidate interviewed by a firm is selected from the candidate’s resume; \autocite{Kleinberg2018} predict whether a bail applicant is released, based on recorded information available at the time of bail hearing. Like our setting, the focus in these studies too is on the predictive signal in the observables and not designing a classifier to be used in practice. The studies report AUC scores of .64 and .70 respectively on their classifiers.
+
+
+We will now turn to verifying whether two choices in our empirical approach i) to include function information in our competency vector and ii) learn a distance function instead of using a standard (Euclidean) metric, has brought predictive gains. Let \( r_1: j \rightarrow \hat{X}_{14} \) and \( r_2: j \rightarrow \hat{X}_{17} \) be the functions that map \( j \) to competency vectors without function information and with function information respectively. Note that in our machine learning pipeline, learning \( r: j \rightarrow \hat{X} \) comes before learning the distance function \( \hat{d}(\cdot) \). So, when testing whether \( r_2 \) has better predictive ability, we use the Euclidean metric as the distance which predicts selection on application. The AUCs for the two classifiers are reported in \autoref{fig:14-17} below.
+
+
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.6\linewidth]{14-17.png} % Adjust the scale as necessary
+    \caption{Comparison: AUC classifier1 (technical skills only). AUC classifier2 (technical skills and function information). The p-value computed using the De Long test.} % Replace with your actual caption
+    \label{fig:14-17} 
+\end{figure}
+
+Including the functional information in the competency vector does improve its ability to predict selection. We use the DeLong test \autocite{DeLong1988} to verify whether the higher AUC score obtained here for competency distance computed on $r_2$ is statistically different \footnote{Delong test is based on recognizing that the empirical AUC value is a U-Statistic. Theory of U-statistics allows to obtain the asymptotic distribution of two correlated empirical AUC curves. The hypothesis test for contrasting two AUCs follows.}. The null distribution returns a $z$ score of 2.15 ($p < 0.04$) suggesting the rejection of null. 
+
+
+We now take up the second verification question, whether we get predictive gains from using the learnt distance function in-lieu of a standard metric like the Euclidean metric. We already know the answer from the earlier exercises. We know that the learnt distance function returns an AUC of 0.69. From the preceding exercise, we know that using the Euclidean distance returns an AUC of 0.64. In \autoref{fig:euc-metr} below, we compare the two AUCs directly, i) A Euclidean distance-based classifier (blue) and ii) a learnt distance function-based classifier. The null hypothesis test that the metric learnt AUC and the Euclidean AUC are same, returns a z score of 2.86 ($p < 0.01$) suggesting the superiority of the metric learnt distance.
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Euc-metric.png} % Adjust the scale as necessary
+    \caption{AUC comparison. Model 1 uses Euclidean distance on competency vectors (blue), Model 2 uses distance function learnt on selection data (green).} % Replace with your actual caption
+    \label{fig:euc-metr} 
+\end{figure}
+
+
+
+So, based on what complementary data is available the firm can conduct more nuanced review and analysis compared to before.
+
+The management's objective is to use the data and machine learning apparatus to identify actions that would enhance internal mobility in the firm. The objective brings forth questions like --- ``addition of what skill \(t\) would allow employee working in \(j_c\) improve their probability of being selected to a set of identified jobs?''. Such a question involves answering smaller questions like --- how much can a database engineer improve their chances of getting a process automation job, if they acquire `Selenium' certification? Consistent with the objective, but a counterfactual question outside the scope of the data and predictive tool at hand. There is no record of training (or skill acquisition) in the data, even to impute an answer to this question. There is emerging academic interest in approaches that look to modify \(j_c\), i.e., generate a synthetic \(j'\) that incorporates the information of acquired skill \(t\) and subsequently compare probability of selection to \(j_s\) --- \(\hat{d}(\hat{X}_C, \hat{X}_S)\) and \(\hat{d}(\hat{X}'_C, \hat{X}_S)\); see \autocite{Bana2021} and \autocite{Sisodia2022}. In such an approach, even if the difficult first part can be achieved, one cannot validate the predictions with the data at hand. Here, we take a simple approach to identify up-skilling opportunities that are based on observed choices (by firm and by applicants) and the current factual assertions.
+
+\subsection*{Job Outlook and Exploratory Choices}
+
+
+In \autoref{fig:app1} below we plot the histogram for the competency distance $\hat{d}(\hat{.})$ for the applications we observe in the validation set. The average probability of selection for applications falling in the regions is reported in the figure. Our interest is in applications that have a low predicted probability of selection. Note that our prediction is based on observable difference in sought and current job competencies. We will refer applications to farther (larger competency distance) jobs as exploratory applications. 
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.6\linewidth]{comp_dis_1.png} % Adjust the scale as necessary
+    \caption{The histogram of competency distances between current and sought jobs in the held-out set. The vertical bands convey the estimated probability of selection in each quintile.} % Replace with your actual caption
+    \label{fig:app1} 
+\end{figure}
+
+
+The ability to identify these exploratory applications allows us to think about programs that support exploratory applications. Two characteristics make exploratory applications and the ability to identify them, interesting. The first is that they have low probability of selection under current patterns of evaluation. From an up-skilling and mobility perspective, this is an opportunity. Support, to bridge the competency gap can help fulfill mobility aspirations of employees. The second is that we can observe the applicant’s choice. When it comes to exploration -- seeking a job that requires notably different competencies from the current one there is usually more than one path available. The data has observed choices made by applicants. In sum, the ability to identify exploratory choices (algorithmically from data) provides management with a list of job transitions that has low probability of success but is desired by employees and can improve mobility within the firm. 
+
+This brings the question of who makes exploratory choices? The firm perhaps do not want to support exploratory choices if it is made by applicants who have opportunities within the firm that utilizes their current job competencies. The firm may not want to institute a program (for example) that supports Webservices engineers to train as Hadoop engineers if there are several opportunities for Webservices engineers to productively use their skills within the firm. In other words, such choices are not incentive compatible with the firm’s talent management goals. 
+
+
+The data at hand allows to compare applicants along one observable dimension --- the available internal positions at the time of their application. For each applicant (represented by their current job) \(j_c\), the analyst observes what other opportunities were available at the time they applied to the job. We can define this as an applicant’s choice set \(C_{jc} := \{j_S\}\) comprising jobs that were listed within \(d\) days prior or after their observed application.
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.6\linewidth]{AB.png} % Adjust the scale as necessary
+    \caption{Competency distance histogram of an applicant to the positions in their choice set. The green dot indicates they applied to a position with distance equal to 0.09.} % Replace with your actual caption
+    \label{fig:AB} 
+\end{figure}
+
+In \autoref{fig:AB} above we have a histogram of the competency distances between an applicant \(j_c\) and the constituent jobs in its choice set \(C_{jc}\) (we picked \(d = 20\)). The distribution conveys information about the opportunities available to \(j_c\) and how their competencies compare to the current job. For supporting mobility, we want to identify applicants who face relatively fewer opportunities that are closer to their current job competencies. We define outlook as a ratio of jobs in \(C_{jc}\): count of jobs that are closer in competencies, to count of jobs farther away in competencies, as a summary measure of the distribution depicted in Figure 10 above. To proceed more precisely, we define all jobs with a competency distance less than 0.11 as close and others as far — depicted in Figure 10 as jobs in regions A and B respectively. The candidate’s outlook \(O_{jc}\) is the ratio of close jobs to far jobs \footnote{$A_{j_c} = \{j_s \in C_{j_c} \mid \hat{d}(\hat{X}_S, \hat{X}_C) < 0.11\}, \quad B_{jc} = \{j_S \in C_{jc} \mid \hat{d}(\hat{X}_S, \hat{X}_C) \geq 0.11\} \quad \text{and} \quad O_{j_c} = \frac{|A_{j_c}|}{|B_{j_c}|}$}. The threshold value is the 3rd quintile of the competency distances observed between current and sought jobs in the validation set. For applications that had a competency distance greater than 0.11 the probability of selection was approximately 0.32 (see \autoref{fig:app1}). A higher outlook number conveys that among the jobs available to \(j_c\) a higher proportion are closer to their current competencies. With the ability to summarize information about the opportunities available to each applicant, we can compare the choice sets of applicants.
+
+
+In \autoref{fig:scatter}-A, for applications in the validation set, the outlook ($O_{j_c}$) is on the x-axis of the scatter diagram and competency distance to the sought job on the y-axis. We want to explore the link between the two. The question of interest to us is whether employees’ exploratory choices are at random or are they linked to job outlook faced by the applicant (our only other observable about the applicant)? Notice in Figure 11 A below that the scatter takes the form of a right triangle. This is indicative that candidates with high outlook are less likely to apply to exploratory positions compared to candidates facing a low outlook. 
+
+
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width= 1\linewidth]{scatter.png} % Adjust the scale as necessary
+    \caption{A. Scatter Diagram of outlook and competency distance. Horizontal grey lines indicate quintiles of competency distance in the validation set. B. Empirical CDF of competency distance to sought job for applicants with outlook $< 1$ (orange) and outlook $ > 1$ (blue). The grey lines aid to check the probability of applying to an exploratory job (distance $ > 0.155$).} % Replace with your actual caption
+    \label{fig:scatter} 
+\end{figure}
+
+
+To clarify the idea, we estimate separate empirical CDFs of the competency distance to the sought job, for applicants whose outlook were less than 1 (\(O_{jc} < 1\)) and those whose outlook values were greater. We plot (in \autoref{fig:scatter}-B) the former, the ECDF of applicants with low outlook in blue and the latter in orange. The orange plot, of applicants with \(O_{jc} > 1\), conveys that the probability that an applicant in this group seeks a position where \(\hat{d}(\hat{X}_S, \hat{X}_C) \geq 0.15\) is small, in fact less than 5\%. The corresponding probability of applying to an exploratory position when \(O_{jc} < 1\) is close to 24\%. This conveys that exploratory choices come from employees facing an internal job market with fewer positions that require competencies closer to that required by their current jobs.
+
+The observation brings strength to our idea of exploratory choices as up-skilling opportunities. Along with the fact that these choices reflect career paths that are harder to achieve and are employees’ observed choices, they are also almost exclusively chosen by employees who have few opportunities to exploit their current competencies. So, training programs instituted to support these paths are unlikely to veer employees who have skills that are sought by different positions away to other jobs.
+
+
+\subsection*{Summarization}
+
+We have a set of exploratory choices and want to design mobility programs that support employees along these paths. In our setting here, there are 51 cases where the distance is greater than 0.15 \((\hat{d}(\cdot) > 0.15)\). To institute initiatives that would support employees to make these career moves, we need to summarize the information contained in the cases. As the current and sought jobs are represented by their respective competency vectors, we can turn to clustering algorithms. Our goal is to obtain current and \textit{sought} job clusters. For clarity, we will define the set comprising exploratory choices as \(U: \{(j_S,j_C)\} \mid \hat{d}(\hat{X}_S, \hat{X}_C) > \alpha\). In our exercise we will set \(\alpha = 0.155\), applications that fall in the fifth quintile of competency distances. Our goal with the summarization exercise is to map the choices in set \(U\) to set \(U_{\neq}^S : \{(C(\hat{X}_S), C(\hat{X}_C))\}\), whose distinct elements are clusters that the sought job and current job belong to respectively. The goal is for \(U_{\neq}^S\) to have significantly fewer elements (lower cardinality) compared to \(U\).
+
+
+We now need a clustering algorithm \(C: \{\hat{X}\} \rightarrow \{1,2,\ldots,k\}\) that maps a job’s competency vector to a cluster. We use k-means, the canonical clustering algorithm. In implementing the clustering algorithm, we have to choose \(k\)\footnote{Note that we previously used k to refer to the parameter to be tuned in the LDA model -- section III. We are reusing k as the number of clusters. As both algorithms are very popular, and their respective tuning parameters referred to as k, we stick to standard nomenclature.}. We choose \(k\) to minimize the cardinality of \(U_{\neq}^S\) subject to the constraint that the sought job and current job for any case in set \(U\) do not belong to the same cluster \((C(\hat{X}_S) \neq C(\hat{X}_C) \forall  (\hat{X}_S, \hat{X}_C) \in U)\). In practice, we used a larger set of job descriptions (their competency vectors) for the clustering exercise and not just those that feature in \(U\). In our context we have \(k = 19\)\footnote{In the clustering exercise we included the full sample of selection data which comprises close to 2000 job descriptions. This corpus was divided to 19 clusters satisfying the constraints described in text above.}. We can leverage the fact that our cluster-centroids are interpretable. They are competency vectors, where each dimension has a description available. For each cluster, we pick up to three features that have the highest weights against them, as descriptors for the cluster. The procedure is illustrated in \autoref{fig:cluster} and the result is summarized in \autoref{tab:cluster-competencies} below.
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.85\linewidth]{cluster.png} % Adjust the scale as necessary
+    \caption{Interpreting cluster centroids} % Replace with your actual caption
+    \label{fig:cluster} 
+\end{figure}
+
+
+\renewcommand{\arraystretch}{1.5} % Increase the row height for better readability
+
+\begin{table}[ht]
+\centering
+\caption{Cluster Competencies Comparison}
+\label{tab:cluster-competencies}
+\begin{tabular}{>{\raggedright\arraybackslash}p{7cm}>{\raggedright\arraybackslash}p{7cm}}
+\toprule
+\textbf{Current cluster competencies} & \textbf{Sought cluster competencies} \\
+\midrule
+Database - ETL+ Java + Front-end & Devops \\
+Mainframe + Developer & Hadoop dev. \\
+Database + Sys. Adm. + \textbf{Support} & Devops \\
+Mainframe + \textbf{Support} & Mainframe + Developer \\
+.NET + \textbf{Support/Test} & Database-ETL + Java + Front-end \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+Note that, the interpretability of clusters is not integral to the logic and method that makes our framework. The user of the framework can retrieve the full job descriptions belonging to a cluster, for review. The benefit of having interpretable clusters is rather more practical. It enables easy communication to decision makers and employees who could benefit from any programs instituted based on this approach. For the analyst, it is easier to communicate – “the data conveys that `mainframe support’ employees have few opportunities within and apply to `devops’ positions with low probability of success” than present the same as “employees in cluster 1 … and apply to positions in cluster 6”. A cautionary note, there is information loss in generating the labels and any program design should evaluate the actual jobs that map on to these clusters. While our chief purpose here is to present a conceptual framework, it is useful to note the patterns generated. Two current job clusters – which here by construction have relatively low outlook are also sought jobs by employees in other positions with low outlook. For example, employees working as `Mainframe developer’ are seeking `Hadoop developer’ positions, but `Mainframe support’ professionals are seeking ‘Mainframe developer’ positions to which they seem to have low probability of selection. This is indicative that there are seekers for jobs who themselves offer (relatively) low potential for mobility.
+
+\subsection*{Coverage}
+
+As an up-skilling initiative, we have identified current job and sought job clusters. A managerially relevant question is regarding the scope of the identified up-skilling paths? In other words, how many current employees are potential beneficiaries of the up-skilling paths identified? We have job descriptions and date of starting in the current positions for 6800 employees. We can see how many among them map onto identified current job clusters. If they map onto the current job clusters, then they face a low outlook and are potential beneficiaries of training programs along the identified paths. To conduct this exercise, we first ask how many current employees have been in their positions for at least 1000 days? This narrows down the list of potential beneficiaries, as employees who started more recently are less likely looking to move.
+
+In our setting, we find 2186 employees who have served in their current positions for over 1000 days (32\% of all employees). Out of which 673 employees fall into one of the five identified current job clusters. In other words, ~10\% of current employees are potential beneficiaries from the identified opportunities. The numbers are computed here for a concrete illustration of the idea and has no relevance away from the setting. The coverage numbers are to be seen as a ceiling for the number of current employees who can potentially benefit from the opportunities identified. Our framework has picked out mobility paths – i) that have a low probability of success ii) are observed choices by iii) employees with a low outlook when it comes to internal opportunities. We do not offer any guidance on the contents of a program that can bridge the competency gap. It is outside the framework’s scope and something for management and technical leadership to design. 
+
+In the absence of a supportive program, only a small proportion of employees make these choices \footnote{Note that even employees facing low outlook ($ < 1$) who contributes the majority of exploratory choices observed, make non-exploratory applications ($\hat{d}(\hat{.}) < 0.155$ in 74\% of the cases) in most cases.}. What proportion of employees we count here would benefit from the program is a tempting question, but one we cannot predict using application patterns observed here. In sum, before instituting the programs we can only obtain a count of potential beneficiaries and not predictions about improvements in mobility outcomes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Rapid advances in Artificial Intelligence and large disruptions in ways of working (work from home) have spurred keen interest about the labour market consequences of technological disruption. The evidence from the preceding wave of digitization and internet adoption indicated that it played a role in fostering skill-biased shifts in the labor market \autocite{qjeskill}, \autocite{Autor2013}.  Work experience and the skills developed through them, play a significant role in shaping the lifetime earnings for a large section of the workforce, especially those commencing careers that require relatively low levels of credentialing. Developing a nuanced understanding of the skills used in diverse jobs and how it influences mobility to other positions is a key part of understanding the new wave of technology linked changes to the labor market. 
+
+
+Major firms are increasingly leveraging data analytics across their business functions, from operations and marketing to finance and product development. This transformation is particularly significant in knowledge-intensive sectors, where human capital is fundamental to firm performance and innovation \parencite{riley2017human}. In these organizations, value creation depends primarily on employees' expertise and capabilities, reflected in the fact that personnel represents their largest operational investment. The nature of technical and knowledge work has evolved substantially - careers are less rigid and frequently span multiple organizations and roles, requiring firms to constantly evaluate and develop their human capital. These shifts in the organizational importance of human capital and the complexity of modern careers have intensified interest in bringing analytical sophistication to HR practices. Both established HRIS providers like Workday and Microsoft, and numerous new ventures are developing analytics solutions that aim to enhance talent management decisions. A technical literature on recommender systems \parencite{shaha2012survey,siting2012job} and representation learning \parencite{heap2014combining, zhu2018person, liu2019tripartite, bian2020learning} has emerged to support platforms that facilitate job search \parencite{heap2014combining,giabelli2021skills2job} and matching jobs to candidates \parencite{zhu2018person,qin2020enhanced}, modeling career paths and skill recommendations \parencite{maurya2017bayesian, kokkodis2021demand}. However, these technical advances have focused primarily on market-level matching rather than HR analytics - the development and management of a firm's workforce. Despite substantial commercial activity and growing vendor offerings in HR analytics, there is limited documented progress on how firms can develop effective analytics for managing their workforce. As \textcite{Tambe2019} point out, a fundamental challenge lies in mapping HR decisions to well-specified data science problems.
+
+
+In this paper, we show how the structure inherent in internal mobility process - with its job postings and selection decisions - enables us to frame a prediction problem that yields a validated skill mapping of positions in the firm. Internal mobility represents a fundamental process in modern organizations where employees increasingly transition across roles as business needs and skill requirements evolve. Rather than following fixed career paths, organizations now depend on dynamic internal movements to align evolving employee capabilities with changing business needs. By focusing on predicting selection of internal candidates to new positions, we demonstrate how firms can leverage their standard HR data to develop validated analytics capabilities. This prediction task, when properly structured, yields a skill mapping of positions that we validate against actual selection decisions. A validated skill distance between positions provide firm with the capability to assess employee fit to new positions and in turn study how employees navigate opportunities based on their skill distance to emerging roles.
+
+
+The approach builds on job descriptions as a rich source of skill information, with selection decisions providing firm-specific structure to guide the mapping of positions in skill space. Our framework needs only standard job posting text and outcomes of internal applications - data that firms routinely collect. We provide an open framework applicable to most large firms with a knowledge workforce and internal mobility process, showing how combining and structuring readily available data can generate hitherto unavailable capabilities in assessing employee fit and develop insights about internal application patterns which directly inputs to a human capital development strategy; a notable advancement in HR analytics capability. 
+
+
+Our empirical analysis draws on data from the IT division of a major U.S. financial services firm. IT divisions are a valuable setting for the development of HR analytics. The job postings have rich description of specific skills and tools that distinguish roles. The pace of change of skills demanded is fast, which create a demand for analytic guidance for human capital management. While our approach is conceptually valid for all knowledge workforces with unstructured career paths, the wide presence of large IT divisions across major firms and sectors \parencite{Cyberstates2024} means a lot of settings where the paper’s advancement is applicable more directly. The firm's internal job board provides rich textual descriptions of positions through job postings, alongside comprehensive records of applications over multiple years. Crucially, we observe both successful and unsuccessful internal transitions, enabling us to systematically study how the skill requirements described in job postings relate to selection outcomes.
+
+
+We develop a machine learning pipeline that constructs and validates a measure of skill distance between positions. The pipeline begins by applying pre-trained language models to job posting text, generating dense embeddings that capture both technical requirements and job responsibilities. These high-dimensional embeddings undergo careful dimension reduction through a combination of principal component analysis and clustering, preserving important variation while enabling effective distance learning. We then learn a distance metric from historical selection decisions, effectively extracting the firm's revealed preferences about skill transferability. The pipeline includes rigorous parameter tuning and validation protocols to ensure robustness of the resulting measure.
+
+Testing on held-out data demonstrates the measure's significant predictive power across multiple dimensions. The probability of selection decreases by 84\% when comparing applications in the lowest versus highest quintile of skill distance. The measure maintains strong predictive power both within vacancies (when multiple candidates apply) and within applicants (across different applications), accounting for 70\% of selection decisions in the former case. We then show that, in our setting additional employee information including age, tenure at firm, and work experience contribute minimally to the predictive power of the skill distance measure, conveying the relative importance of the skill fit captured. Applying this validated measure to analyze application behavior reveals distinct mobility patterns: employees whose skills closely match available vacancies often adopt a passive approach despite higher chances of success, while those facing larger skill distances pursue more vacancies but target positions requiring substantial skill development. These patterns convey that facilitating mobility can benefit from a two pronged approach, reducing matching frictions for well-matched employees and reducing skill gaps among other employees. 
+
+
+
+
+\textbf{Literature Review}
+
+Two papers in the literature have data analytic work with a stated internal mobility focus. \textcite{2024_Cowgill} studies trade-offs between two mechanisms that assign employees to teams. The paper’s focus is the tension between employee and firm objectives in matching/mobility decisions. Our focus is on building analytic capability that illuminates and subsequently guide processes where mobility can be facilitated where there is no mismatch. Work by \textcite{devos2024data} takes up the problem of building a recommender system that recommends new positions to employees. The paper develops a collaborative filtering algorithm based on observed transitions and employee features, with a similarity-based regularization approach to get past the cold start problem. While this approach learns a latent representation of workers based on their features and jobs held, it leaves out extensive information on skills, information contained in the reject decisions in the mobility process, and is constrained by the limited positions that individuals take up in their tenure at the firm. 
+
+As discussed in the introduction, a technical literature has emerged around recommender systems that link people to positions and suggest skills. Papers in the Information Systems literature \parencite{kokkodis2021demand, kokkodis2023good} have examined how matching algorithms can incorporate market conditions, reflecting broader interest in combining job and skill representations with economic factors. While our setting of internal mobility presents distinct challenges, these studies inform approaches to representing skills and positions. The limited documentation of method development and validation in HR analytics that we note finds echo in broader discussions of algorithmic hiring - \parencite{raghavan2020mitigating} provides a systematic examination of candidate screening algorithms, highlighting similar concerns about transparency and evaluation.
+
+
+
+Our focus on internal mobility connects naturally to a rich stream of management research examining how employees and firms navigate internal labor markets. Studies have documented how internal moves, including lateral transitions, shape career trajectories \parencite{bidwell2024stepping}, and highlighted efficiency gains from internal hiring \parencite{bidwell2011paying}. The framework we develop, centered on skill-fit and application behavior, offers a lens to examine these mobility patterns. By connecting skills to mobility behavior, our work relates to questions long studied in empirical personnel economics about how organizational structures and policies shape career incentives. The literature, from early work by \textcite{baker1994internal, baker1994wage} to recent contributions by \textcite{tambe2020paying} and \textcite{huitfeldt2023internal}, provides valuable context for understanding how employees navigate internal opportunities, a process our framework helps illuminate through the lens of skills and selection patterns.
+
+
+A growing literature in management and economics leverages job posting text to study labor market dynamics. Researchers have extracted signals from job descriptions to examine wage premia \parencite{Bana2021}, analyze technology's impact on skill demands \parencite{George2024}, and forecast differential effects of generative AI on workforce requirements \parencite{eloundou2024gpts, 2024_Acemoglu}. While we share with this literature an interest in extracting skill information from job postings, our setting of internal mobility, with its observable selection decisions and individual outcomes, presents a different analytical context.
+
+
+We proceed as follows: In Section \ref{sec:research_setting}, we describe the research setting, the firm, data and the internal mobility process. In Section \ref{sec:objective_approach}, we outline the conceptual ideas of the prediction problem. Section \ref{sec:machine_learning_pipeline} presents the machine learning pipeline, the algorithms and details of data processing and implementation. In Section \ref{sec:evaluation_skill_distance}, we evaluate the effectiveness of the skill distance metric in predicting selection outcomes in detail. In Section \ref{sec:internal_mobility_patterns} we apply the distance measure to new positions to study application intensity to new positions vary with skill fit and concluding in Section \ref{sec:conclusion_discussion}
+
+
+
+
+
+Another one 
+
+
+
+Major firms are increasingly leveraging data analytics across their business functions, from operations and marketing to finance and product development. This transformation is especially critical in knowledge-intensive sectors, where human capital drives firm performance and innovation \parencite{riley2017human}. Despite substantial investments in human capital and its centrality to value creation \parencite{MGI2023Performance}, firms lack validated ways to measure and track employee skill-fit. This challenge has intensified as technical and knowledge work evolves - careers are less rigid, frequently spanning multiple organizations and roles, requiring firms to constantly evaluate and develop their human capital. These shifts in the importance of human capital and complexity of modern careers have heightened interest in bringing analytical sophistication to HR practices.
+
+Established HRIS providers like Workday and Microsoft, along with numerous new ventures, are developing analytics solutions for HR. However, adequate technical and development details of these solutions remain largely unavailable. The existing technical literature has explored approaches to job recommendation, worker-job matching, and skill representation learning---supporting platforms that facilitate job search, candidate-opening matching, and career trajectory modeling\footnote{The technical literature has included work on recommender systems \cite{shaha2012survey,siting2012job} and representation learning \parencite{heap2014combining, zhu2018person, liu2019tripartite, bian2020learning} to support platforms facilitating job search \parencite{heap2014combining,giabelli2021skills2job}, matching jobs to candidates \parencite{zhu2018person,qin2020enhanced} and modeling career paths and skill recommendations \parencite{maurya2017bayesian, kokkodis2021demand}.}. While these advances show the potential of data-driven approaches, developing validated analytics capabilities within firms presents distinct challenges. Internal approaches must work with limited mobility data while leveraging unique organizational information unavailable to external platforms.
+
+This paper presents the first validated approach to learning skill representations of employees from internal firm data. We demonstrate how combining job posting text with actual selection decisions enables firms to develop representations of employees that does not require employee history across multiple positions in the firm. The key insight lies in structuring a prediction problem that leverages the data from a firm’s internal mobility process. The process links different positions in the firm and the selection decisions provide additional information about their proximity in the skill space. We start with embeddings of job posting text obtained from pre-trained models, and then learn a distance metric using actual selection decisions which results in a firm-specific mapping of positions in skill space, before validating the distance on held out data. 
+
+
+Testing on held-out data validates the measure's informativeness - the probability of selection is 84\% lower when the skill distance to the sought position is in the highest quintile compared to when it is in the lowest quintile. The measure is informative in predicting selection i) within vacancies (multiple candidates seeking same position) and within applicants (an applicant seeking different positions have higher chance of being selected where the skill distance to the sought position is the lowest). 70\% of selections when multiple candidates apply is the candidate with the least skill distance. Notably, additional employee information including age, tenure, and work experience contribute minimally to predictive power, underlining the importance of skill-fit captured by our measure.
+
+
+Applying this validated measure reveals novel patterns in internal mobility. Employees whose skills closely match available vacancies adopt a relatively passive approach despite higher chances of success, while those facing larger skill distances pursue more vacancies and pursue positions requiring them to acquire new skills. The patterns conveying that facilitating mobility and human capital development requires both reducing matching frictions for some set of employees and addressing skill gaps among others. Our findings open new avenues for analyzing how employees navigate internal opportunities through the lens of skill-fit.
+
+Our empirical analysis draws on data from the IT division of a major U.S. financial services firm. IT divisions provide an ideal setting for developing HR analytics - job postings contain rich descriptions of specific skills and tools, while rapid technological change creates ongoing demand for skill evaluation. While our approach applies broadly to knowledge workforces with unstructured career paths, the widespread presence of IT divisions across sectors \parencite{Cyberstates2024} offers numerous settings for direct application. The firm's internal job board provides comprehensive application records over multiple years, including both successful and unsuccessful transitions.
+
+
+The machine learning pipeline begins by applying pre-trained language models to job posting text to generate dense embeddings that represent skill descriptions in high-dimensional space. While these models capture rich semantic relationships in general language, our firm-specific context of skill relationships likely lies in a much lower dimensional space. Moreover, with relatively few selection decisions compared to the embedding dimensions, we need dimension reduction to enable effective learning of the distance metric. The distance metric learning, akin to fine-tuning the general language model's notion of similarity for our specific context, reveals meaningful skill relationships. This learned representation's validity is demonstrated through its strong predictive power on held-out selection decisions, and its application reveals novel patterns in how employees navigate internal opportunities based on their skill-fit.
+
+
+Our paper makes two contributions. First, we demonstrate how standard firm data - job postings and selection decisions - can be structured to learn validated skill representations within firms. This methodological advance works with limited mobility histories and requires no external data or special circumstances, offering firms a practical approach to understanding their skill space validated through actual selection outcomes. Second, applying this validated measure reveals novel patterns in how employees navigate opportunities based on their skill-fit, providing new tools to advance research in empirical management and personnel economics and for firms practical tools to understand more deeply and develop a quantitative approach to human capital practices. 
+
+
+
+
+Naother lit
+
+
+Two papers have focused on developing internal firm analytics. Work by \textcite{devos2024data} takes up the problem of building a recommender system that recommends new positions to employees. The paper develops a collaborative filtering algorithm based on observed transitions and employee features. While this approach learns a latent representation of workers based on their features and jobs held, it is constrained by requiring rich histories of individual transitions, which is challenging in settings where employees have longer tenure in teams and consequently shorter lists of positions held. Our approach, designed for such settings, leverages the rich information on skills contained in job descriptions and the additional signal from reject decisions in the mobility process. Being built on skill information, it can readily assess fit to new positions not previously seen in the firm. \textcite{2024_Cowgill} studies trade-offs between team assignment mechanisms, focusing on the tension between employee and firm objectives. The frequent team formation and limited use of detailed position information in both papers suggest they are best suited for contexts where teams are regularly reconfigured. Our work develops analytics capabilities for firms where positions require specialist skills that evolve over time - leveraging rich job descriptions and selection decisions to create validated skill mappings.
+
+
+As discussed in the introduction, a technical literature has emerged around recommender systems that link people to positions and suggest skills. Papers in the Information Systems literature \parencite{kokkodis2021demand, kokkodis2023good} have examined how matching algorithms can incorporate market conditions, reflecting broader interest in combining job and skill representations with economic factors. While our setting of internal mobility presents distinct challenges, these studies inform approaches to representing skills and positions. The limited documentation of method development and validation in HR analytics that we note finds echo in broader discussions of algorithmic hiring - \parencite{raghavan2020mitigating} provides a systematic examination of candidate screening algorithms, highlighting similar concerns about transparency and evaluation.
+
+
+
+Our focus on internal mobility connects naturally to a rich stream of management research examining how employees and firms navigate internal labor markets. Studies have documented how internal moves, including lateral transitions, shape career trajectories \parencite{bidwell2024stepping}, and highlighted efficiency gains from internal hiring \parencite{bidwell2011paying}. The framework we develop, centered on skill-fit and application behavior, offers a lens to examine these mobility patterns. By connecting skills to mobility behavior, our work relates to questions long studied in empirical personnel economics about how organizational structures and policies shape career incentives. The literature, from early work by \textcite{baker1994internal, baker1994wage} to recent contributions by \textcite{tambe2020paying} and \textcite{huitfeldt2023internal}, provides valuable context for understanding how employees navigate internal opportunities, a process our framework helps illuminate through the lens of skills and selection patterns.
+
+
+A growing literature in management and economics leverages job posting text to study labor market dynamics. Researchers have extracted signals from job descriptions to examine wage premia \parencite{Bana2021}, analyze technology's impact on skill demands \parencite{George2024}, and forecast differential effects of generative AI on workforce requirements \parencite{eloundou2024gpts, 2024_Acemoglu}. While we share with this literature an interest in extracting skill information from job postings, our setting of internal mobility provides unique advantages - the ability to validate skill representations through actual selection decisions and observe how employees navigate opportunities. Our findings that skill-fit derived from job postings strongly predicts mobility outcomes provides validation for the broader literature's use of posting text to measure skill requirements.
+
+
+We proceed as follows: In Section \ref{sec:research_setting}, we describe the research setting, the firm, data and the internal mobility process. In Section \ref{sec:objective_approach}, we outline the conceptual ideas of the prediction problem. Section \ref{sec:machine_learning_pipeline} presents the machine learning pipeline, the algorithms and details of data processing and implementation. In Section \ref{sec:evaluation_skill_distance}, we evaluate the effectiveness of the skill distance metric in predicting selection outcomes in detail. In Section \ref{sec:internal_mobility_patterns} we apply the distance measure to new positions to study application intensity to new positions vary with skill fit and concluding in Section \ref{sec:conclusion_discussion}
+
+
+
+
+
+\end{document}

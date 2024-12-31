@@ -1,0 +1,144 @@
+
+
+\section{Research Setting}\label{sec:research_setting}
+
+
+\subsection{Context}
+
+
+This section outlines the organizational setting from which our study draws its data, focusing on the 
+Information Technology division of a prominent U.S.-based financial services institution. This division 
+provides an ideal setting to validate the informativeness of job posting content through actual selection 
+decisions. It is structured into multiple units and subunits designed to meet the comprehensive IT demands 
+of a large corporation. Some units specialize in the development and support of IT systems tailored to 
+specific business lines, including trading, wealth management, and retail banking. Meanwhile, other 
+units focus on overarching IT goals such as system upgrades, legacy system retirement, and compliance 
+reporting. This diversity in technical roles generates detailed job postings whose skill requirements 
+can be validated against actual selection outcomes.
+
+
+
+The diverse and dynamic nature of this IT division, with its wide range of technical and process-driven roles, 
+provides a rich context for examining how well job postings capture skill requirements. Teams are continually 
+evolving, driven by the need to adapt to emerging technologies and shifting market demands. Internal mobility 
+is strategically encouraged to align the evolving competencies of the workforce with the institution's 
+operational needs and strategic goals. This backdrop, with its continuous flow of detailed job postings and 
+selection decisions, enables us to test whether posting content meaningfully discriminates between 
+candidates' skill fit to new positions.
+
+
+Within these teams, we concentrate on employees classified as individual contributors. These positions demand 
+specific technical skills and process knowledge, primarily focused on technical tasks rather than staff management. 
+As units continually evolve—whether by developing new systems or enhancing existing ones—there is a frequent need 
+for individual contributors who possess emerging, highly specialized skills. This need reflects a broader trend in 
+the tech industry, where the demand for specific competencies is rapidly evolving.
+
+Aware of the high external market demand for these technical skills, the organization places significant emphasis on 
+promoting internal mobility. This strategy is designed to mitigate the high costs and competitive challenges of 
+external hiring. By enabling employees to transition into roles that better match their evolving skills and 
+career aspirations, the organization not only retains valuable talent but also fosters a culture of continuous 
+learning and adaptation. This internal mobility not only supports individual career development but also aligns 
+with the organization’s broader goals of agility and strategic skill alignment.
+
+
+The internal mobility process is centrally facilitated through an internal job board. When a unit identifies the need 
+for a new staff member, the hiring manager crafts a detailed job description specifying required skills and 
+responsibilities, which is then posted on this board accessible to all employees. Organizational policy supports 
+internal transfers and there are minimal restrictions on applying to internal positions, empowering employees 
+to apply for roles that align with their skills and career goals without needing prior approval from their 
+current manager. This policy, supports employee mobility and consequently generates a rich set of mobility 
+data and selection decisions compared to a firm with more restrictive proactices.
+
+Once applications are submitted, the recruiting unit conducts an initial screening, followed by interviews to 
+identify the most suitable internal candidate. If no appropriate internal candidate is identified within a 
+specific timeframe, the position is then opened to external applicants. This structured approach underscores 
+the organization's commitment to prioritizing and developing internal talent, thereby enhancing retention and 
+career progression opportunities for existing staff.
+
+HR's role in this process is primarily regulatory, focused on ensuring adherence to organizational policies 
+throughout the recruitment cycle. However, HR leadership is increasingly recognizing the strategic value of 
+enhancing internal mobility and is eager to adopt data-driven initiatives that can further this objective. 
+They are particularly interested in harnessing the vast amounts of organizational data available to derive 
+insights that can refine and optimize internal mobility practices, thus supporting the overarching goal of 
+sustained employee development and organizational adaptability.
+
+\subsection{Data}
+
+Our dataset, extracted from the firm's HRIS (Workday), covers the period from 2018 to 2021, capturing 8,180 new job 
+positions for individual contributors. For each vacancy, the HRIS tracks shortlisted applicants, distinguishing 
+between internal and external candidates. We observe unique Employee IDs for internal applicants and for external 
+applicants only if selected. This structure enables longitudinal linking, connecting the vacancy posting of the 
+current (internal) applicant to the new vacancy posting. Each job posting includes a text description of the 
+division, the required technology skillset, and the associated tasks and responsibilities. 
+Table \ref{tab:job_postings} provides a sample of the internal job postings data, illustrating the 
+structure of our dataset. Refer to \ref{box:vacancy_posting} for a snippet of the content in a job 
+vacancy posting, which demonstrates the typical information included in these listings, such as 
+overview, key responsibilities, and required skills.
+
+In our dataset, we observed 1,370 instances of internal applications, resulting in 650 selections and 720 rejections. 
+This comprehensive view of internal mobility attempts provides insights into career progression dynamics within 
+the organization. Table \ref{tab:job_transitions} presents a sample of internal applications, showing the 
+relationship between current jobs and applied positions, along with selection outcomes. The longitudinal 
+nature of our data allows us to follow individual employee trajectories, such as tracking an employee selected 
+for a position in early 2019 who then applied for different roles in 2021. By linking job descriptions of 
+current roles with those of positions applied for, we gain a detailed view of internal mobility patterns over 
+time. This linkage is illustrated in both Tables \ref{tab:job_postings} and \ref{tab:job_transitions}, where 
+we can observe the progression of employees through different roles and their application outcomes.
+
+
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Sample of Internal Job Postings Data}
+\label{tab:job_postings}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Req.\_id & Vacancy Posting & Date & Applicant & Internal & Select & Emp\_id \\
+\hline
+1001 & Data Scientist... & 2018-03-15 & Yes & Yes & No & E5678 \\
+1001 & Data Scientist... & 2018-03-15 & Yes & No & No & - \\
+1003 & Junior Data Scientist... & 2019-04-10 & Yes & Yes & Yes & E9012 \\
+1004 & Software Dev. 1... & 2019-11-01 & No & - & - & - \\
+1005 & ML Engineer... & 2020-02-20 & Yes & Yes & No & E3456 \\
+\multicolumn{1}{|c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} \\
+\multicolumn{1}{|c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} \\
+\hline
+\end{tabular}
+\vspace{0.5cm}
+\caption{Sample of Internal Applications}
+\label{tab:job_transitions}
+\begin{tabular}{|c|c|c|}
+\hline
+Current Job & Applied Job & Selected \\
+\hline
+Data Analyst... & Data Scientist... & No \\
+Junior Dev... & Software Dev. 1... & No \\
+Data Scientist... & ML Engineer... & Yes \\
+QA Engineer... & Software Dev. 1... & No \\
+ML Engineer... & Senior ML Engineer... & Yes \\
+\multicolumn{1}{|c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{tcolorbox}[colback=gray!5,colframe=blue!75!black, title=Vacancy Posting Snippet - Hadoop Developer, label=box:vacancy_posting]
+\small
+\textbf{Overview:} Leading financial institution seeking Hadoop developer for Big Data initiatives.
+\textbf{Key Responsibilities:}
+\begin{itemize}
+\item Develop Big Data strategy and roadmap
+\item Design and deploy scalable Big Data platforms
+\item Analyze and optimize system performance
+\item Evaluate new technologies and innovate solutions
+\end{itemize}
+\textbf{Required Skills:}
+\begin{itemize}
+\item Extensive knowledge of Hadoop ecosystem (HDFS, MapReduce, HIVE, Spark, etc.)
+\item Experience with Big Data enterprise architecture (Cloudera preferred)
+\item Proficiency in NoSQL technologies (Cassandra, HBase)
+\end{itemize}
+\textbf{Desired Skills:} Real-time streaming, Big Data Analytics, BI tools, Data Lake experience
+\end{tcolorbox} 

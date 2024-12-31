@@ -1,0 +1,31 @@
+# LaTeX temporary files
+*.aux
+*.log
+*.out
+*.pdf
+*.synctex.gz
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.toc
+*.lot
+*.lof
+
+# LaTeX build directories
+build/
+output/
+
+# Bibliography auxiliary files
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+# Generated PDFs (comment out if you want to track PDFs)
+*.pdf
+
+# macOS system files
+.DS_Store

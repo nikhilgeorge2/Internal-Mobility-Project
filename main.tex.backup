@@ -1,0 +1,773 @@
+\documentclass[12pt]{article}
+
+% Page Layout and Customizations
+\usepackage{geometry}
+\geometry{margin=1in} % Adjust margins as needed
+\usepackage{setspace}
+\onehalfspacing % Set line spacing to 1.5
+\usepackage{parskip}  % For adjusting paragraph spacing
+
+% Fonts and Section Title Customizations
+\usepackage{newtxtext} % Times New Roman font
+\usepackage{titlesec} % For customizing section titles
+\titleformat{\section}{\normalfont\fontsize{16}{19}\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\fontsize{13}{16}\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalfont\fontsize{12}{15}\bfseries}{\thesubsubsection}{1em}{}
+
+% Math Packages
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+% Table and Figure Packages
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{graphicx, placeins} % Required for inserting images
+\usepackage{svg}
+
+% Bibliography Setup
+\usepackage[style=apa,backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+% Link and Color Settings
+\usepackage{hyperref}  % For clickable links, if needed
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{enumitem}
+\definecolor{boxbackground}{HTML}{F0F0F0}  % light grey background
+\definecolor{boxframe}{HTML}{000000}       % black frame
+
+\usetikzlibrary{positioning} 
+\usepackage{booktabs, array, colortbl, tcolorbox} 
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+
+% Other
+\usepackage{multicol}
+
+% Colorbox Setup
+\usepackage{tcolorbox}
+
+\titlespacing*{\paragraph}{0pt}{1.5ex plus 0.5ex minus 0.2ex}{1em} % Adjust paragraph spacing
+
+\title{How Informative are Job Posting Skill Measures? Evidence from Selection Decisions}
+
+\author{} % Author names and affiliations removed
+
+\date{November, 2024} % Customize date as needed
+
+
+\begin{document}
+
+\maketitle
+
+{% Start of the local line spacing change
+\linespread{1.5}\selectfont
+\begin{abstract}
+Information in job postings plays an increasingly central role in modern labor markets; aside from information for potential employees the content in them is a key part of matching algorithms, screening tools, and broader workforce analytics. This brings up the demand to ascertain how the measures of skills and job requirements built from job postings predict actual selection outcomes. We provide a first validation of the informativeness by predicting selection to internal jobs at a major firm from a measure of skill distance built on job postings. Skill distances built on job postings strongly predict selection - the probability of selection is 84\% higher when the sought job is in the lowest quintile of skill distance compared to a position in the highest distance quintile. And in 70\% of cases the selected candidate is the one with the shortest skill distance. These skill measures consistently outperform traditional employee characteristics in explaining selection. We build on this validation to show how internal application intensity is strongly correlated with average skill distance to emerging opportunities - novel insights relevant to human capital management and research on employee mobility in modern labor markets. Beyond validating posting informativeness through selection outcomes, our analysis reveals rich possibilities for research and analytics leveraging the skill content in job postings. 
+
+\end{abstract}
+} % End of the local line spacing change
+
+\newpage
+
+\section{Introduction}
+
+
+Major corporations like Google, Walmart, and IBM, along with other public and private agencies, have committed to skills-based hiring policies, focusing on capabilities rather than traditional credentials such as degrees or work experience \parencite{hbr2022skillsbased, mckinsey2020future, wef2020jobs}. This shift comes at a time when employees increasingly pursue less fixed career paths both within and across firms, and when the skills required to perform modern work evolve rapidly. These forces compel firms to articulate skill requirements and job responsibilities with greater precision in their postings. This information is not only consumed by potential applicants—it is embedded in the algorithms used by platforms like Indeed and LinkedIn to curate and match opportunities to candidates, and ingested by sophisticated screening tools that shortlist applicant resumes based on fit against these requirements. Job postings and their content are also systematically harvested by specialized firms like Revelio and Lightcast, who package this data into analytical products that provide insights into workforce skill requirements across industries\footnote{The workforce analytics provided by firms like Revelio and Lightcast have not only supported businesses but also spurred a growing body of academic research that study trends in skill demands and job creation \parencite{goldfarb2020artificial, azar2020concentration}, and otter critical labor market phenomena \parencite{hershbein2018recessions, forsythe2020labor, braxton2023technological}.}. These developments underscore the growing importance of job postings as a key source of valuable information at the analytical, strategic, and policy levels.
+
+
+Despite this growing centrality of job posting content and significant investment in its analysis, no rigorous validation exists of whether posting-derived skill measures predict actual selection and mobility outcomes. While firms are investing in more detailed skill descriptions, and sophisticated tools are being built to extract and analyze this content, consumers of posting-based analytics and tools operate without clear evidence of informativeness. Legitimate concerns exist - postings might be aspirational rather than realistic, could be template-driven or overly generic, and might list "nice to have" skills rather than true requirements. Understanding how informative these postings are for measuring skill requirements is crucial for the growing ecosystem of tools and analytics being built on this content. The ability to validate posting-derived measures against selection decisions would inform both current applications and future innovations.
+
+
+We partner with the IT division of a major financial services firm to study the informativeness of job postings by linking it to actual workers and their mobility process. This setting provides an ideal laboratory - the firm's hiring process generates detailed position requirements through job postings, which multiple internal candidates consider and apply to. The firm's internal job board offers comprehensive records of both successful and unsuccessful applications over multiple years. Crucially, we can link the applicants to the postings of their current job and observe both successful and unsuccessful applications, providing the opportunity to assess the informative content in job postings to predict selection. By structuring a prediction problem, we can examine whether the skill distances derived from posting content meaningfully predict selection outcomes, thereby contributing a first of its kind estimate of the nature and level of informativeness in job postings; an information source of increasing application inside and outside the firm.
+
+Our analysis reveals substantial predictive power in posting-derived skill measures. The probability of selection decreases by 84\% when comparing applications in the lowest versus highest quintile of skill distance, indicating posting content captures meaningful differences in worker-job fit. This predictive power is particularly evident when examining vacancies with multiple applicants - in 70\% of these cases, the candidate with the shortest skill distance was selected. The predictive relationship holds both across vacancies and within applicants (across their different applications). Notably, traditional employee characteristics like age, tenure, and work experience contribute minimally beyond the skill distance measure - suggesting the rich information in job postings dominates standard observable characteristics in explaining selection outcomes.
+
+
+The first step in our machine learning pipeline converts the key information in a job posting to a job skill-embedding by mapping it in the language space of a pre-trained language model. While these embeddings capture rich semantic relationships in general language, our context of technical skills and responsibilities likely lies in a much lower dimensional space. Moreover, with relatively few selection decisions compared to the embedding dimensions, we need dimension reduction to enable effective learning of the distance metric. The distance metric learning, akin to fine-tuning the general language model's notion of similarity for our specific context, reveals meaningful skill relationships. This learned representation's validity is demonstrated through its strong predictive power on held-out selection decisions, and its application reveals novel patterns in how employees navigate opportunities based on skill-fit.
+
+
+We apply the skill distance measure to investigate internal job application patterns, revealing another dimension of job posting informativeness. Those whose skills closely match available vacancies adopt a relatively passive approach despite higher chances of success, while employees facing larger skill distances actively pursue positions requiring skill development. By structuring standard posting and mobility data, we show how posting-derived analytics can generate actionable insights about whether reducing search frictions or investing in skill development should be prioritized. Such capabilities suggest a promising direction for HR analytics, a field that has seen limited advancement despite significant interest \parencite{Tambe2019} - the combination of skill information in job postings and mobility patterns enables rich workforce analytics. Our analysis reveals novel patterns about internal mobility, providing evidence about job search behavior in an environment characterized by employed workers navigating evolving skill requirements - a setting distinct from traditional unemployment-focused search models. This ability to measure skill requirements from job postings and track mobility decisions opens new possibilities for personnel economics research to systematically investigate career navigation and skill development choices.
+
+
+Our paper illuminates the informative content in job postings by linking their skill and responsibility descriptions to selection outcomes and application decisions. Through selection prediction, we provide first validation that posting-derived skill measures capture meaningful differences in worker-job fit - a crucial validation given the growing use of posting content in platforms, analytics, and research. Through our inquiry into application patterns, we illuminate how this posting information relates to mobility behavior. This analysis demonstrates significant potential for firms to gain insights about internal mobility and its relationship to skill-fit by leveraging posting information, while opening new research possibilities in understanding how employees navigate careers in environments characterized by evolving skill requirements.
+
+
+To summarize, this paper illuminates how  findings validate a fundamental data source driving major market decisions while demonstrating rich analytical possibilities. By showing posting content contains meaningful skill information that predicts outcomes, we inform the growing ecosystem of screening tools and analytics built on this content. The results challenge pessimism about HR analytics by showing how posting information can guide specific interventions - from reducing search frictions for well-matched workers to targeting skill development where needed. This posting-based approach outperforms traditional collaborative filtering methods by leveraging the rich content in job descriptions, opening new avenues for research in labor economics and personnel practices.
+
+
+
+
+\textbf{Literature Review}
+
+A rich technical literature has explored approaches to job recommendation, worker-job matching, and skill representation learning---supporting platforms that facilitate job search, candidate-opening matching, and career trajectory modeling\footnote{The technical literature has included work on recommender systems \cite{shaha2012survey,siting2012job} and representation learning \parencite{heap2014combining, zhu2018person, liu2019tripartite, bian2020learning} to support platforms facilitating job search \parencite{heap2014combining,giabelli2021skills2job}, matching jobs to candidates \parencite{zhu2018person,qin2020enhanced} and modeling career paths and skill recommendations \parencite{maurya2017bayesian, kokkodis2021demand}.}. While these advances demonstrate sophisticated ways to process job posting content, they focus on improving platform functionality rather than validating whether derived skill measures predict actual selection outcomes. The lack of selection data in platform settings provides limited empirical motivation to evaluate the informativeness of posting-derived measures.
+
+Two papers studying internal labor markets highlight different approaches to measuring employee-position fit. \textcite{devos2024data} develops a recommender system for internal positions, using collaborative filtering based on observed transitions and employee features to generate position recommendations. \textcite{2024_Cowgill} studies team assignment mechanisms, measuring fit through survey-based skill scores validated by management. While these papers focus on different questions, both require some measure of employee fit to new positions. Our approach leverages the rich skill information contained in job postings, information these approaches do not utilize, to generate validated measures of fit that require neither extensive mobility histories nor expert validation.
+
+Beyond algorithmic applications, a growing literature in management and economics leverages job posting text to study labor market dynamics. Researchers have extracted signals from job descriptions to examine wage premia \parencite{Bana2021}, analyze technology's impact on skill demands \parencite{George2024}, and forecast effects of generative AI \parencite{eloundou2024gpts, 2024_Acemoglu}. Our setting of internal mobility enables validation of the informativeness of these posting-derived measures through actual selection decisions. The finding that skill-fit strongly predicts selection provides validation for this literature's use of posting text to measure skill requirements.
+
+The Information Systems literature has studied algorithms that match workers to jobs and recommend skill development \parencite{kokkodis2021demand, kokkodis2023good}, while also examining how to assess the value of data for algorithmic applications \parencite{lei2024value}. These topics connect to our study of how informative job postings are about skills and job requirements. Related to our validation focus, \parencite{raghavan2020mitigating} documents limited transparency about how well automated screening systems predict actual selection outcomes - our demonstration that posting-derived skill measures strongly predict selection provides a framework for building and evaluating such algorithms.
+
+Our analysis shows how incorporating skill similarity derived from job postings reveals distinct patterns in internal mobility. Studying career moves and incentives is a rich literature in management research and personnel economics - studies have documented patterns in internal moves \parencite{bidwell2024stepping} and efficiency gains from internal hiring \parencite{bidwell2011paying}, while research spans from early work on career incentives \parencite{baker1994internal, baker1994wage} to recent studies of internal labor markets \parencite{tambe2020paying, huitfeldt2023internal}. Job posting content, we demonstrate, is a valuable but underutilized source of information that, when combined with mobility data, enables deeper understanding of how employees navigate careers in environments requiring regular skill acquisition. The patterns in how application intensity varies with skill-fit to emerging positions illustrates the potential for enriching our understanding of modern career navigation.
+
+
+We proceed as follows: In Section \ref{sec:research_setting}, we describe the research setting, the firm, data and the internal mobility process. In Section \ref{sec:objective_approach}, we outline the conceptual ideas of the prediction problem. Section \ref{sec:machine_learning_pipeline} presents the machine learning pipeline, the algorithms and details of data processing and implementation. In Section \ref{sec:evaluation_skill_distance}, we evaluate the effectiveness of the skill distance metric in predicting selection outcomes in detail. In Section \ref{sec:internal_mobility_patterns} we apply the distance measure to new positions to study application intensity to new positions vary with skill fit and concluding in Section \ref{sec:conclusion_discussion}
+
+
+
+\section{Research Setting}\label{sec:research_setting}
+
+
+\subsection{Context}
+
+
+This section outlines the organizational setting from which our study draws its data, focusing on the Information Technology division of a prominent U.S.-based financial services institution. This division provides an ideal setting to validate the informativeness of job posting content through actual selection decisions. It is structured into multiple units and subunits designed to meet the comprehensive IT demands of a large corporation. Some units specialize in the development and support of IT systems tailored to specific business lines, including trading, wealth management, and retail banking. Meanwhile, other units focus on overarching IT goals such as system upgrades, legacy system retirement, and compliance reporting. This diversity in technical roles generates detailed job postings whose skill requirements can be validated against actual selection outcomes.
+
+
+
+The diverse and dynamic nature of this IT division, with its wide range of technical and process-driven roles, provides a rich context for examining how well job postings capture skill requirements. Teams are continually evolving, driven by the need to adapt to emerging technologies and shifting market demands. Internal mobility is strategically encouraged to align the evolving competencies of the workforce with the institution's operational needs and strategic goals. This backdrop, with its continuous flow of detailed job postings and selection decisions, enables us to test whether posting content meaningfully discriminates between candidates' skill fit to new positions.
+
+
+Within these teams, we concentrate on employees classified as individual contributors. These positions demand specific technical skills and process knowledge, primarily focused on technical tasks rather than staff management. As units continually evolve—whether by developing new systems or enhancing existing ones—there is a frequent need for individual contributors who possess emerging, highly specialized skills. This need reflects a broader trend in the tech industry, where the demand for specific competencies is rapidly evolving.
+
+Aware of the high external market demand for these technical skills, the organization places significant emphasis on promoting internal mobility. This strategy is designed to mitigate the high costs and competitive challenges of external hiring. By enabling employees to transition into roles that better match their evolving skills and career aspirations, the organization not only retains valuable talent but also fosters a culture of continuous learning and adaptation. This internal mobility not only supports individual career development but also aligns with the organization’s broader goals of agility and strategic skill alignment.
+
+
+The internal mobility process is centrally facilitated through an internal job board. When a unit identifies the need for a new staff member, the hiring manager crafts a detailed job description specifying required skills and responsibilities, which is then posted on this board accessible to all employees. Organizational policy supports internal transfers and there are minimal restrictions on applying to internal positions, empowering employees to apply for roles that align with their skills and career goals without needing prior approval from their current manager. This policy, supports employee mobility and consequently generates a rich set of mobility data and selection decisions compared to a firm with more restrictive proactices.
+
+Once applications are submitted, the recruiting unit conducts an initial screening, followed by interviews to identify the most suitable internal candidate. If no appropriate internal candidate is identified within a specific timeframe, the position is then opened to external applicants. This structured approach underscores the organization's commitment to prioritizing and developing internal talent, thereby enhancing retention and career progression opportunities for existing staff.
+
+HR's role in this process is primarily regulatory, focused on ensuring adherence to organizational policies throughout the recruitment cycle. However, HR leadership is increasingly recognizing the strategic value of enhancing internal mobility and is eager to adopt data-driven initiatives that can further this objective. They are particularly interested in harnessing the vast amounts of organizational data available to derive insights that can refine and optimize internal mobility practices, thus supporting the overarching goal of sustained employee development and organizational adaptability.
+
+\subsection{Data}
+
+Our dataset, extracted from the firm's HRIS (Workday), covers the period from 2018 to 2021, capturing 8,180 new job positions for individual contributors. For each vacancy, the HRIS tracks shortlisted applicants, distinguishing between internal and external candidates. We observe unique Employee IDs for internal applicants and for external applicants only if selected. This structure enables longitudinal linking, connecting the vacancy posting of the current (internal) applicant to the new vacancy posting. Each job posting includes a text description of the division, the required technology skillset, and the associated tasks and responsibilities. Table \ref{tab:job_postings} provides a sample of the internal job postings data, illustrating the structure of our dataset. Refer to \ref{box:vacancy_posting} for a snippet of the content in a job vacancy posting, which demonstrates the typical information included in these listings, such as overview, key responsibilities, and required skills.
+
+In our dataset, we observed 1,370 instances of internal applications, resulting in 650 selections and 720 rejections. This comprehensive view of internal mobility attempts provides insights into career progression dynamics within the organization. Table \ref{tab:job_transitions} presents a sample of internal applications, showing the relationship between current jobs and applied positions, along with selection outcomes. The longitudinal nature of our data allows us to follow individual employee trajectories, such as tracking an employee selected for a position in early 2019 who then applied for different roles in 2021. By linking job descriptions of current roles with those of positions applied for, we gain a detailed view of internal mobility patterns over time. This linkage is illustrated in both Tables \ref{tab:job_postings} and \ref{tab:job_transitions}, where we can observe the progression of employees through different roles and their application outcomes.
+
+
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Sample of Internal Job Postings Data}
+\label{tab:job_postings}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Req.\_id & Vacancy Posting & Date & Applicant & Internal & Select & Emp\_id \\
+\hline
+1001 & Data Scientist... & 2018-03-15 & Yes & Yes & No & E5678 \\
+1001 & Data Scientist... & 2018-03-15 & Yes & No & No & - \\
+1003 & Junior Data Scientist... & 2019-04-10 & Yes & Yes & Yes & E9012 \\
+1004 & Software Dev. 1... & 2019-11-01 & No & - & - & - \\
+1005 & ML Engineer... & 2020-02-20 & Yes & Yes & No & E3456 \\
+\multicolumn{1}{|c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} \\
+\multicolumn{1}{|c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} \\
+\hline
+\end{tabular}
+\vspace{0.5cm}
+\caption{Sample of Internal Applications}
+\label{tab:job_transitions}
+\begin{tabular}{|c|c|c|}
+\hline
+Current Job & Applied Job & Selected \\
+\hline
+Data Analyst... & Data Scientist... & No \\
+Junior Dev... & Software Dev. 1... & No \\
+Data Scientist... & ML Engineer... & Yes \\
+QA Engineer... & Software Dev. 1... & No \\
+ML Engineer... & Senior ML Engineer... & Yes \\
+\multicolumn{1}{|c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{tcolorbox}[colback=gray!5,colframe=blue!75!black, title=Vacancy Posting Snippet - Hadoop Developer, label=box:vacancy_posting]
+\small
+\textbf{Overview:} Leading financial institution seeking Hadoop developer for Big Data initiatives.
+\textbf{Key Responsibilities:}
+\begin{itemize}
+\item Develop Big Data strategy and roadmap
+\item Design and deploy scalable Big Data platforms
+\item Analyze and optimize system performance
+\item Evaluate new technologies and innovate solutions
+\end{itemize}
+\textbf{Required Skills:}
+\begin{itemize}
+\item Extensive knowledge of Hadoop ecosystem (HDFS, MapReduce, HIVE, Spark, etc.)
+\item Experience with Big Data enterprise architecture (Cloudera preferred)
+\item Proficiency in NoSQL technologies (Cassandra, HBase)
+\end{itemize}
+\textbf{Desired Skills:} Real-time streaming, Big Data Analytics, BI tools, Data Lake experience
+\end{tcolorbox} 
+
+
+
+
+\section{Objective and Approach}\label{sec:objective_approach}
+
+To test whether job postings contain meaningful information about skill requirements, we develop a distance measure between positions based on their posting content. If postings are informative about skills and requirements, this distance should be inversely related to the probability of selection when a person working in one position applies to fill another. In this section, we outline our goal and approach to learning the distance metric and introduce notation before discussing the details in the following section. To build intuition, let us consider the evaluation of a single internal applicant for a position. Let \(j_c\) denote the job description of the internal applicant and \(j_v\) the job description of the vacancy. There is some \(z_i\), a feature vector of the applicant observed in the selection process, which we do not observe. The decision maker assesses a distance \(\delta(j_v, (j_c, z_i))\) and selects the applicant if:
+\[
+S(j_v, (j_c, z_i)) = 
+\begin{cases} 
+1, & \text{if } \delta(j_v, (j_c, z_i)) < \tau \\
+0, & \text{if } \delta(j_v, (j_c, z_i)) \geq \tau
+\end{cases}
+\]
+Here, \(S\) is a binary selection indicator. We observe the set \(A = \{(j_v, j_c, S)\}\) of past decisions, where \(S\) is the observed selection decision. Although we do not observe the feature vector \(z_i\) available to the decision maker, we use the set \(A\) to verify that the probability of selection \(\text{Pr}(S = 1 \mid x_v, x_c)\) is decreasing in \(d(x_v, x_c)\). Our goal is to find a representation function \(f\) that maps job descriptions \(\{j_i\}\) to a set of vectors \(\{x_i\}\), where \(x_i = f(j_i)\). Each vector \(x_i\) encodes information about the skills and responsibilities described in \(j_i\). We then want to choose an appropriate distance metric \(d(x_v, x_c)\) defined on the set \(\{x_i\}\) such that \(d(x_v, x_c)\) serves as a stand-in for \(\delta(j_v, (j_c, z_i))\). We aim to choose \(f\) and \(d\) so that a classifier predicting whether an applicant is selected for the position they applied for, based on \(d(x_v, x_c)\), has a high Area Under the Receiver Operating Characteristic Curve (AUC).
+
+
+Success in predicting selection through the skill distance measure would validate that job postings capture meaningful differences in position requirements. Rather than relying on a uniform probability estimate of selection, the ability to generate varying probabilities based on posting content would demonstrate that these descriptions contain valuable and discriminative information about skill fit. If posting content is informative, the distance between job profile vectors should enable us to distinguish between more and less likely selections based purely on the documented position requirements. This would confirm that the detailed skill descriptions in postings meaningfully capture actual job requirements rather than serving as generic templates.
+
+
+We will now briefly discuss how we approach testing posting informativeness through this prediction task, before presenting a more detailed version in the following section. Our approach involves mapping job descriptions \(\{j_i\}\) to vectors \(\{x_i\}\) so that the distance \(d(x_v, x_c)\) inversely correlates with the probability of selection when a worker in current job \(c\) applies to vacancy \(v\). Two key ideas guide our approach to choosing the representation and distance metric. First, we leverage the language capabilities of a pre-trained transformer-based language model. While the specialized vocabulary used in IT job descriptions could be represented using more classical NLP approaches, the advanced language capabilities of a transformer model offer significant advantages in capturing subtle differences in skill requirements. Second, we utilize our selection and rejection data in a supervised capacity during the selection process for the representation and distance metric. This means we don't merely use the set of internal applications whose outcomes we observe for validation; we also incorporate this data to learn which aspects of posting content are most informative for predicting selection.
+
+
+\begin{figure} % Use the figure environment for caption and label
+    \centering % Center the picture
+    \begin{tikzpicture}[node distance=1.2cm, auto, thick, scale= 1, every node/.style={scale= 1}]
+        % Styles for the boxes and arrows
+        \tikzstyle{box} = [rectangle, draw, text width=2.5cm, text centered, minimum height=1.5cm]
+        \tikzstyle{arrow} = [thick,->,>=stealth]
+        \tikzstyle{dotted arrow} = [thick,->,>=stealth,dotted]
+        % Nodes
+        \node[box] (embeddings) {Pre-trained Embeddings};
+        \node[box, right=of embeddings] (reduction) {Dimension Reduction};
+        \node[box, right=of reduction] (metric) {Distance Metric Learning};
+        \node[box, right=of metric] (selection) {Parameter Tuning};
+        \node[box, below=0.8cm of selection] (validation) {Validation}; % Reduced distance
+        % Arrows
+        \draw[arrow] (embeddings) -- (reduction);
+        \draw[arrow] (reduction) -- (metric);
+        \draw[arrow] (metric) -- (selection);
+        \draw[dotted arrow] (selection) to[bend right] node[midway, below] {Adjust based on AUC} (reduction);
+        \draw[arrow] (selection) -- (validation); % This arrow is now shorter due to reduced distance
+    \end{tikzpicture}
+    \caption{Machine Learning Overview} % Add caption inside the figure environment
+    \label{fig:ml_pipeline} % Add label for referencing
+\end{figure}
+
+\autoref{fig:ml_pipeline} pictorially outlines our broad approach. The first major idea is to leverage the capabilities of a pre-trained language model. We begin with standard pre-processing of job posting texts, then utilize pre-trained embeddings. In our context, embeddings are numerical representations of entire sentences or paragraphs from job descriptions. These embeddings capture the complex language patterns and specialized vocabulary often found in IT job descriptions. This aligns with our use of a pre-trained transformer-based language model, which excels at generating such representations. This approach provides a rich initial representation of the required skills and responsibilities, setting the foundation for our distance metric learning process. Using embeddings allows us to quantify and compare job descriptions more effectively than traditional text-based methods.
+
+The rich and dense embeddings from general-purpose language models are representations in a much larger space. Our goal is to measure distances between these objects, which lie in a smaller subspace. In high dimensions, most points tend to be roughly the same distance apart; as distance measure is important to us, we want to bring down the dimensionality of our representations. A second motivation is our interest in using the selection/rejection data in a supervising framework to learn a distance metric. The core idea is to learn from data a matrix $M$ to re-weight the distance between the respective representations of two job descriptions. As the observations of internal applications are limited, our ability to reweigh the distance measure is affected with high dimensions, in addition to the aforementioned curse of dimensionality problem of distances becoming less meaningful at higher dimensions. We apply dimension reduction techniques to transition the high-dimensional embeddings to more manageable vectors, facilitating more effective distance metric learning while retaining the most relevant information.
+
+
+The third aspect of our data analytic framework involves using a distance metric that is fine-tuned to our historical selection and rejection data in a supervised capacity. This ensures that the learned metric is tailored to our specific context. The key idea is that differences along features that matter less for selection should weigh less than differences along features that matter more. Metric learning is a well-established idea in machine learning, which we can apply to learn a custom distance between any pair of job representations. This approach allows us to incorporate the valuable information contained in our past hiring decisions directly into our distance measure.
+
+In practice, we must choose the dimensions of our representations carefully. Too few dimensions would not capture the differences between job profiles adequately, while too many would dampen our ability to take advantage of the supervised framework. We can select the optimal dimensionality of the representation via cross-validation. To measure effectiveness, we will utilize the Area Under the Curve (AUC), allowing us to iteratively adjust our approach. This process of validation and adjustment ensures that our distance metric continually improves in its ability to capture the selection patterns within the firm.
+
+
+This pipeline integrates pre-trained language models, dimensionality reduction, and supervised distance metric learning, making use of historical application and selection data. By actively crafting our representation and distance metric using real selection data, we can test whether job posting content meaningfully captures differences in skill requirements beyond simple text similarity. With this approach, we aim to validate whether postings contain sufficient information to predict selection outcomes, setting the foundation for examining how informative these descriptions are about actual position requirements and worker-job fit.
+
+
+\section{Machine Learning Pipeline}\label{sec:machine_learning_pipeline}
+
+In this section, we explain the machine learning pipeline that converts vacancy posting text into continuous numerical vectors. We leverage the structured nature of job descriptions to extract high-signal information efficiently. Job descriptions, despite their length, follow a consistent format. We focus on the easily detectable Mandatory and Desired Skills sections, which provide concentrated information about skill and competency requirements. Using the Spacy natural language processing library, we parse these sections to extract key technical skills such as programming languages (e.g., Java, Asp.Net), web frameworks (e.g., Django), and testing tools (e.g., Selenium).
+
+While knowledge of technologies is important, the Responsibilities section conveys crucial functional aspects of the role. These can vary notably even between positions requiring similar technology skills, such as developers, testers, and support engineers. The section typically lists tasks to be performed, which might include 'develop big data strategy,' 'conduct code reviews,' 'engage with stakeholders' or 'application development.' We extract such task descriptions from job responsibilities by employing natural language processing techniques. This includes part-of-speech tagging to identify action verbs and dependency parsing to locate their direct objects, which are then combined to form concise verb-object phrases representing key tasks. By leveraging the structured format and our knowledge of the postings, we effectively eliminate low-signal words in the description. In the following subsections, we describe our machine learning pipeline which adheres to two key ideas: leveraging capabilities of a pre-trained language model and utilizing past selection decisions. 
+
+\subsection{Pre-trained Embeddings}
+
+Here we describe the approach to mapping the extracted text to the embedding space of a pre-trained language model. To create vector representations of the two parts we employ Sentence-BERT (SBERT), a modification of the pre-trained BERT network \autocite{devlin2018bert}. SBERT is designed to derive semantically meaningful sentence embeddings, making it more efficient for comparing longer text strings than BERT embeddings, which are typically word vectors, although the BERT word-level embeddings vary with the context, unlike their predecessors \autocite{reimers-2019-sentence-bert}. SBERT converts text into dense vector representations, effectively capturing the semantic meanings and relationships between words. This model is particularly suitable for our needs because it is pre-trained and fine-tuned for similarity tasks, ensuring that it can generate fixed-size embeddings that are both informative and consistent. The embeddings are generated using the SentenceTransformers library (model: paraphrase-MiniLM-L6-v2). By leveraging SBERT, we ensure that our embeddings capture the nuanced language used in job descriptions, which is critical for accurately representing the skills and tasks. 
+
+For every $j_i$, we have the set of words $j_i^s$ (skills) and $j_i^t$ (tasks) and obtain SBERT embeddings $e_i^s$ ($384 \times 1$) and $e_i^t$ ($384 \times 1$) respectively. This separation allows for more granular embeddings and a focused semantic representation of each aspect. These embeddings encapsulate the semantic content of the job descriptions, allowing us to compare and analyze them effectively. The dual-embedding approach provides a comprehensive view of each position, highlighting both the required competencies and the associated responsibilities. This detailed representation forms the foundation for developing a robust distance metric that can accurately reflect the similarity between job descriptions, ultimately aiding in the assessment of internal mobility and selection probabilities.  
+
+\subsection{Dimension Reduction}
+
+To manage the high-dimensional embeddings generated for job descriptions, we apply Principal Component Analysis (PCA) to reduce the dimensionality of both \(\{e_i^s\}\) and \(\{e_i^t\}\). PCA is a technique that transforms the original high-dimensional data into a new coordinate system with fewer dimensions while retaining most of the original variance. For our embeddings, we apply PCA separately to the skill embeddings \(\{e_i^s\}\) and the task embeddings \(\{e_i^t\}\), retaining 90\% of the variance in each case. This process reduces the skill embeddings from 384 dimensions to 49 dimensions, now denoted as \(\{p_i^s\}\), and the task embeddings from 384 dimensions to 124 dimensions, now denoted as \(\{p_i^t\}\). Notably, the dimensionality of the skills embedding (\(\dim(p_i^s) = 49\)) is smaller than that of the tasks embedding (\(\dim(p_i^t) = 124\)). This indicates that a relatively small number of components capture most of the information in the skills embedding, which is expected since skills are described using a more specific vocabulary compared to tasks. If we concatenate the \(\{p_i^t\}\) and \(\{p_i^s\}\) embeddings, the resulting representation is still 173 dimensions, which is too high for measuring a useful distance between job postings.
+
+
+To further reduce the dimensionality of our job description embeddings, we perform dimension reduction via clustering. The core idea is to represent each of our original embeddings in terms of its membership probabilities with respect to cluster centers. Specifically, we calculate the membership probability of a job description for each cluster, resulting in a set of \(k\) probabilities for each embedding. These \(k\) probabilities form a new vector of dimension \(k\), effectively reducing the original high-dimensional embeddings to a more manageable size.
+
+We employ the Fuzzy C-Means (FCM) algorithm, which allows each embedding to belong to multiple clusters with varying degrees of membership. The membership probabilities are values between 0 and 1 and sum to 1, forming a probabilistic distribution. In our implementation, we apply FCM to both the skill embeddings \(\{p_i^s\}\) and the task embeddings \(\{p_i^t\}\). Let \(k_s\) be the number of skill clusters and \(k_t\) be the number of task clusters. For each job description, FCM generates a membership probability vector \(m_i^s\) (\(k_s \times 1\)) for skills and \(m_i^t\) (\(k_t \times 1\)) for tasks, indicating the degree to which each job description belongs to each cluster.
+
+Concatenating these membership probability vectors \(m_i^t\) and \(m_i^s\) results in \(x_i\), a low-dimensional representation of \(j_i\). This combined vector \(x_i (k * 1)\) effectively captures the key information in \(j_i\) while reducing the dimensionality of the data, facilitating the development of a robust distance metric tailored to our specific context. This lower-dimensional representation improves the accuracy and effectiveness of our internal mobility predictions by preserving the most relevant information for measuring distances between job postings. The vectorization process described is illustratively summarized in \autoref{fig:job-vectorization}. This leaves us with the question of selecting the number of skill and task clusters, which we will take up after we discuss the measuring of distances between job postings and their informativeness regarding selection probabilities to vacancies. 
+
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}
+        % Styles for the squares and arrows
+        \tikzset{
+            square/.style={
+                draw,
+                rectangle,
+                minimum size= 2cm,
+                fill=none,
+                align=center
+            },
+            arrow/.style={
+                thick,
+                ->,
+                >=stealth 
+            }
+        } 
+        % Define initial position and shift for squares
+        \def\initpos{0}
+        \def\shift{2.75}  % Distance between centers of squares
+        % Custom labels for each step in the process
+        \def\labelsT{{"j_i^t", "e_i^t", "p_i^t", "m_i^t"}}
+        \def\labelsS{{"j_i^s", "e_i^s", "p_i^s", "m_i^s"}}
+        % Drawing the squares, split squares, and arrows
+        \foreach \i in {0,...,4} {
+            % Draw split square for the first four
+            \ifnum\i<4
+                \node[square] (square\i) at (\initpos+\shift*\i,0) {};
+                \draw (square\i.south) -- (square\i.north);
+                \node at ([xshift=-0.375cm] square\i.center) {$\pgfmathparse{\labelsT[\i]}\pgfmathresult$};
+                \node at ([xshift=0.375cm] square\i.center) {$\pgfmathparse{\labelsS[\i]}\pgfmathresult$};
+            \else
+                % Draw the unsplit square for the fifth one
+                \node[square] (square\i) at (\initpos+\shift*\i,0) {$x_i$};
+            \fi
+            % Draw arrow to next square
+            \ifnum\i>0
+                \draw[arrow] (square\the\numexpr\i-1\relax.east) -- (square\i.west);
+            \fi
+        }
+    \end{tikzpicture}
+    
+    \vspace{1em}
+    
+    \begin{center}
+        \small
+        \begin{tabular}{lll}
+            \textbf{Notation} & \textbf{Description} & \textbf{Dimensions} \\
+            \hline
+            $j_i^{t/s}$ & Split to task and skill components of $j_i$ & text \\
+            $e_i^{t/s}$ & $\text{SBERT}(j_i^{t/s})$ & $384 \times 1$ \\
+            $p_i^{t/s}$ & $\text{PCA}(e_i^{t/s})$  & $124 \times 1$ (tasks), $49 \times 1$ (skills) \\
+            $m_i^{t/s}$ & $\text{FuzzyC}(p_i^{t/s})$  & $k_t \times 1$ , $k_s \times 1$  \\
+            $x_i$ & $m_i^t \oplus m_i^s$ & $k_t + k_s \times 1$ \\
+        \end{tabular}
+    \end{center}
+    
+    \caption{This is a pictorial representation of the vectorization process that captures the information in a job posting to a numerical vector. The table provides a summary of the notation and dimensions used at each step of the process.}
+    \label{fig:job-vectorization}
+\end{figure}
+
+
+\subsection{Distance Metric Learning} 
+
+Now that we have represented the textual job descriptions in a vector format, we test whether these representations capture meaningful skill information by learning a distance metric that predicts selection outcomes. In formulating this distance, our two major ideas included leveraging the capabilities of pre-trained language models and using past selection decisions in a supervisory capacity to learn which aspects of posting content are most informative for predicting selection.
+
+The ability to learn a custom metric is advantageous because it allows us to create a distance function tailored to the specific characteristics and selection patterns of our organization. Traditional distance metrics, such as Euclidean distance, treat all dimensions equally and do not take into account the nuances of job descriptions and the importance of different skills and responsibilities in the selection process. By learning a custom distance metric, we can weigh the various components of \(x_i\) according to their relevance in the actual hiring decisions. For instance, if a vacancy requires expertise in Mainframe development but also involves some tasks related to preparing reports and using presentation software, the lack of expertise in Mainframe development would significantly reduce the chances of being selected, whereas the latter skills, which are easier to acquire, would have less impact. This approach leads to a more accurate and informative measure of job similarity. In other words, our goal is to craft a distance that is specifically adapted to the problem of assessing skill adequacy for filling the vacancy.
+
+We will focus on learning a distance from the family of Mahalanobis distances, which are parameterized by a matrix \(M\). The core idea is that dimensions contributing less to the distance should receive lower weight. For example, if a vacancy requires expertise in Mainframe development but only some competence in word processing, the latter skill will be weighted less in the distance measure. If the matrix is diagonal, the distance calculation represents a stretch for each dimension. Irrelevant covariates will be compressed so that their values are always effectively zero. Highly relevant covariates will be stretched so that for two units to be considered a match, they must have very similar values for those covariates. In this way, diagonal matrices lead to very interpretable distance metrics. If the Mahalanobis distance matrix is not constrained to be diagonal, then it induces a stretch and rotation, leading to more flexible albeit less interpretable notions of distance. The distance function we aim to learn is defined as:
+\begin{equation}
+d(x_v, x_c; M) = \sqrt{(x_v - x_c)^T M (x_v - x_c)}
+\end{equation}
+Here, \(x_v\) and \(x_c\) are the vector representations of the competencies required at the sought vacancy \(v\) and the current job \(c\), respectively and $M$ is a positive semi-definite matrix.
+
+Our dataset \(A\) consists of tuples \((x_v, x_c, S_{v,c})\), where \(j_v\) is the current job description, \(j_c\) is the sought vacancy description, and \(S_{v,c}\) is the binary selection indicator. Our focus is on a distance that can discriminate between skill distances in the set of \textit{plausible} applications, whose empirical counterpart is \(A\). In other words, we want \(M\) such that the distance between cases that resulted in rejection is larger compared to cases that resulted in selection. We utilize the past selection and rejection data to inform our metric learning process. Specifically, we adopt the Mahalanobis Metric for Clustering (MMC) algorithm by \autocite{Xing2002} to learn a distance function that can effectively differentiate between selected and non-selected candidates. The optimization problem solved is the following: 
+
+\begin{align*}
+\text{Maximize:} \quad & \sum_{(v,c): S_{v,c} = 0} d(x_v, x_c; M) \\[1em]
+\text{Subject to:} \quad & \sum_{(v,c): S_{v,c} = 1} d(x_v, x_c; M)^2 \leq 1 \\
+& M \succeq 0
+\end{align*}
+
+
+Adapting to our context, we are maximizing the sum of distances for cases that did not result in selection. The constraints are regularity constraints that ensure the data is not collapsed to a point and the distance satisfies the triangle inequality. This approach allows us to craft a distance metric \(d(x_v, x_c)\) that effectively captures the skill and competency fit between positions, utilizing the historical selection data to guide the learning process. Our dataset \(S\) comprises 1060 observations, which forms 75\% of our total data points on selection decisions. The implementation of this approach uses Python 3.5, with the MMC algorithm available in the sci-kit learn library, requiring no special computing resources. In the following subsection, we will discuss the parameter tuning process for determining the optimal length of embeddings, which in turn will define the size of the matrix \(M\).
+
+
+
+
+\subsection{Parameter Tuning} 
+
+To implement the algorithm, we need to determine the optimal number of clusters ($k_t$, $k_s$) for the reduced task and skill embeddings, which will define the final representation $x_i$ of a job description. This selection must be data-driven to ensure the most accurate distance metric for predicting selection probabilities. Using our dataset of 1,370 internal applications and their outcomes (excluding rejections in favor of other internal applicants), we employ 5-fold cross-validation on the application dataset $A$. We iteratively test combinations of $k_s$ and $k_t$, where $k_s, k_t \in \{2, 3, ..., 20\}$, subject to the constraint $k_s + k_t < 25$. This constraint is a practical one: with limited training data, we cannot allow the dimensionality of M to grow too large, as this could lead to overfitting. For each combination, we compute the average Area Under the Receiver Operating Characteristic Curve (AUC).
+
+The results, reported in Figure \ref{fig:AUC}, show that the best model achieves an AUC of 0.62 with $k = 20$, where $k_s = 17$ (skill clusters) and $k_t = 3$ (task clusters). This cross-validation process ensures that the chosen number of clusters provides a representation that effectively captures the underlying patterns in the data, leading to a more accurate and informative distance metric for predicting internal mobility and selection outcomes.  
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.75\textwidth]{new_img/chart.png}
+    \caption{5 fold AUCs computed at different dimensionality of $k$}
+    \label{fig:AUC}
+\end{figure}
+
+
+The AUC of 0.62 indicates that skill distances derived purely from job posting text have meaningful predictive power - the probability that a randomly chosen selected application will be ranked as better fit than a randomly chosen rejected application is substantially higher than chance. This demonstrates that job postings contain real information about position requirements that predicts selection outcomes. As we show in subsequent sections, this validation of posting informativeness opens new possibilities for understanding skill requirements and worker-job fit.
+
+To recap, we developed a machine learning pipeline to test whether job posting content meaningfully captures differences in position requirements by predicting selection outcomes. Our approach leverages the capabilities of pre-trained language models and the opportunity to take a supervised approach by utilizing past selection decisions. This combination of rich text representations and actual selection outcomes demonstrates that postings contain meaningful information about skills and requirements, providing a foundation for deeper analysis of how workers and firms navigate evolving skill demands.
+
+
+\section{Evaluation: Does Skill Distance Predict Selection?}\label{sec:evaluation_skill_distance}
+
+This section evaluates whether our job postings based skill-distance measure meaningfully captures skill requirements by testing how well our derived distance metric predicts selection of internal candidates for new positions. Our test set comprises 308 cases where internal applicants applied to vacancies (approximately 25\% of our total cases). We examine whether skill distances computed purely from posting content capture predictable variation in selection outcomes. It's important to note that the information contained in an applicant's job description ($j_c$) may not fully capture the skills and abilities of that position, let alone those of the candidate. This potential measurement loss informs our approach. Our primary interest lies in understanding the extent to which posting content predicts selection, and in assessing the relative contribution of the skill distance measure compared to a few other observed features.
+
+\subsection{Skill Distance and Selection Probability}
+
+To assess the relationship between skill distance and selection probability, we employ a logistic regression to quantify the association:
+
+\begin{equation}
+\text{logit}(P(\text{S}{c,v} = 1)) = \beta_0 + \beta_1 \times Q_k(d{j_c, j_v})
+\end{equation} 
+
+Here, \( Q_k(d_{j_c, j_v}) \) represents the quintile of the skill distance between the applicant's current job (\( j_c \)) and the vacancy (\( j_v \)). We discretize the distance into a categorical variable, as the relationship between selection probability and distance is unlikely to be simply linear. This discretization offers stability and robustness to extreme values while retaining easy interpretation. \autoref{tab:logistic_regression} shows that the coefficient for skill distance is negative and significant \((\beta_1 = -0.3268, \, p < 0.01)\), indicating that applicants with lower skill distance to a vacancy have a higher likelihood of being selected.
+
+
+\begin{table}[h]
+    \centering
+    \caption{Logistic Regression Results for Skill Distance and Selection Probability}
+    \renewcommand{\arraystretch}{1.2} 
+    \begin{tabular}{lcc}
+    \hline
+    \textbf{Variable} & \textbf{Coefficient} & \textbf{Std. Error} \\
+    \hline
+    Intercept & 1.1171*** & 0.265 \\
+    Quintile & -0.3268*** & 0.086 \\
+    \hline
+    Observations & \multicolumn{2}{c}{308} \\
+    Pseudo R-squared & \multicolumn{2}{c}{0.03551} \\
+    \hline
+    \multicolumn{3}{l}{\footnotesize{*** p$<$0.01}} \\
+    \end{tabular}
+    \label{tab:logistic_regression}
+\end{table}
+
+The regression suggests that, on average, an applicant-vacancy pair in the lowest skill distance quintile has an 84\% higher probability of selection compared to a pair in the highest quintile. \autoref{fig:skill_distance_probability} illustrates the association between skill distance quintile and predicted selection probability.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{new_img/pp.png}
+    \caption{Selection Probability by Skill Distance Quintile}
+    \label{fig:skill_distance_probability}
+\end{figure}
+
+While skill distance accounts for a small component of the variation in selection decisions, its ability to capture differences in selection probability is unambiguous. We will now exploit the structure in our test sample to examine the association. 
+
+
+\subsection{Skill Distance: Within-Vacancy and Within-Applicant Variation}
+
+When multiple internal candidates apply to the same vacancy, we have an opportunity to verify if selection among different applicants for the same position is predicted by their respective skill distances. Correlation between skill distance and selection measured at each vacancy level would convey a more direct link of the measured distance. Similarly, we have cases where an applicant has applied to different vacancies. This allows us to focus on applicant-level selection data to examine whether the applicant has a higher selection probability for vacancies to which they have a low skill distance. Focusing on a single applicant allows us to control for unobserved factors that influence their selection chances across vacancies, such as broadly relevant skills they have acquired or performance in their current job. While we have already established a notable negative association between skill distance and selection, these analyses would further demonstrate that the measured skill distance captures significant selection variation at both the applicant and vacancy levels, thereby reinforcing the measure's informativeness.
+
+
+
+\subsubsection{Within-Vacancy Selection}
+
+To assess the predictive power of the skill distance metric, we evaluated the proportion of vacancies where the applicant with the lowest skill distance was selected. Our analysis encompassed 261 observations across 110 vacancy groups from our test set, each group comprising a vacancy with multiple internal applicants and one selection. The analysis revealed that the candidate with the lowest skill distance was chosen in 69.92\% of cases, suggesting the metric's reliability in predicting selection outcomes. We further analyzed the role of skill distance in the selection probability among applicants competing for the same vacancy using a conditional logit model. The model incorporated vacancy-specific fixed effects ($\alpha_v$) to concentrate on within-vacancy variation. The results indicated that being in a higher skill distance quintile decreased the probability of selection by 35\% ($\beta = -0.4293$, $p < 0.01$). The initial exploratory analysis demonstrates the skill distance metric's capacity to predict selection outcomes in a majority of cases. Building on this, the more formal conditional logit model enables a rigorous examination of the role of skill distance in differentiating applicants within the same vacancy. Together, these findings highlight the relevance and importance of the skill distance measure in the selection process. 
+
+\begin{equation}
+\text{logit}(P(\text{S}_{v,c} = 1)) = \alpha_v + \beta Q_k(d_{j_c,j_v})
+\end{equation}
+
+\begin{table}[h]
+    \centering
+    \caption{Conditional Logit Model Results for Within-Vacancy Analysis}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lcc}
+    \hline
+    \textbf{Variable} & \textbf{Coefficient} & \textbf{Std. Error} \\
+    \hline
+    Quintile & -0.4293*** & 0.122 \\
+    \hline
+    Observations & \multicolumn{2}{c}{261} \\
+    Groups & \multicolumn{2}{c}{110} \\
+    \hline
+    \multicolumn{3}{l}{\footnotesize{*** p$<$0.01}} \\
+    \end{tabular}
+    \label{tab:within_vacancy}
+\end{table}
+
+This within-vacancy analysis strengthens our confidence that skill distance is a crucial factor in differentiating among applicants, rather than merely reflecting individual selection probabilities. These results underscore the relevance and importance of the skill distance measure in the selection process. 
+
+
+
+\subsubsection{Within Applicant Selection}
+
+Now, we analyze the ability of our skill distance measure to account for selection decisions within an applicant's multiple vacancies. We again employ a conditional logit model, this time incorporating applicant-specific fixed effects ($\alpha_c$).
+
+
+\begin{equation}
+\text{logit}(P(\text{S}_{c,v} = 1)) = \alpha_c + \beta Q_k(d_{j_c,j_v})
+\end{equation}
+
+The test dataset now comprises 111 observations from 33 applicant groups, each applying to multiple vacancies. The results reveal that applicants in higher skill distance quintiles experience a 50\% reduction in selection probability (\(\beta = -0.695\), \(p = 0.017\)). This demonstrates that the measured skill distance effectively accounts for selection decisions within applicants. 
+
+
+\begin{table}[h]
+    \centering
+    \caption{Conditional Logit Model Results for Across-Applicant Analysis}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{lcc}
+    \hline
+    \textbf{Variable} & \textbf{Coefficient} & \textbf{Std. Error} \\
+    \hline
+    Quintile & -0.695** & 0.290 \\
+    \hline
+    Observations & \multicolumn{2}{c}{111} \\
+    Groups & \multicolumn{2}{c}{33} \\
+    \hline
+    \multicolumn{3}{l}{\footnotesize{** p$=$0.017}} \\
+    \end{tabular}
+    \label{tab:across_applicant}
+\end{table}
+
+
+These patterns demonstrate that the skill distance from an applicant's current job provides valuable information for predicting selection to new internal vacancies. While selection typically depends on an applicant's skill-set and preparedness for the new position's demands, our findings reveal that a distance measure constructed from job postings and past selection decisions correlates strongly with observed selection patterns. This correlation opens an analytical window into the firm, linking skills to internal mobility. Before exploring these links we examine how important is the skill distance measure relative to other observed features in predicting selection to vacancies.
+
+
+
+\subsection{Other Observed Features}
+
+While our paper primarily focuses on leveraging information from job postings and selection decisions, we recognize the importance of evaluating other predictors of internal candidate selection. To enhance our understanding of selection patterns, we examine additional features available in the firm's information system. We compare the performance of our skill distance metric against other observed applicant characteristics, including tenure at the organization, total work experience, job category, vacancy (job sought) category, and proficiency rating. Table \ref{tab:other_features} presents summary statistics for these features. 
+
+\begin{table}[h]
+    \centering
+    \caption{Summary Statistics -- Other Observed Features}
+    \begin{tabular}{l c c c c}
+        \toprule
+        \textbf{Notation} & \textbf{Description} & \textbf{Unit} & \textbf{25th Percentile} & \textbf{75th Percentile} \\
+        \midrule
+        $t_c$ & Tenure at $c$ & days & 661 & 1346 \\
+        $T_c$ & Total experience & days & 1927 & 3009 \\
+        $l_c$ & Job category & 4 levels & 2 & 3 \\
+        $l_v$ & Vacancy category & 4 levels & 2 & 3 \\
+        $p_c$ & Proficiency rating & 4 levels & 2 & 2 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:other_features}
+\end{table}
+
+The data shows notable differences among applicants. Tenure ranges from about 2 years to 3.5 years, while total experience spans from roughly 5 years to 8 years at the 25th and 75th percentiles. Job and vacancy categories both range from level 2 to 3, indicating movement across organizational tiers. Proficiency ratings, however, remain consistent at level 2 for at the 25th and 75th percentiles. These observed features, as shown in Table \ref{tab:other_features}, display clear variation across the applicant pool. Their potential to explain selection patterns merits further exploration, complementing our primary skill distance metric.
+
+
+To assess the relative importance of the skill distance measure  we employ Random Forest classifiers. The well known ensemble learning algorithm captures complex interactions between variables. We train two Random Forest models on our training dataset: one incorporates all features including skill distance, while the other excludes skill distance. This method isolates and quantifies the predictive power of the skill distance metric relative to other observed features. We evaluate these models on our test set and will again employ the AUC metric. Table \ref{tab:model_comparison} presents the AUC scores for both models on the test set.
+
+\begin{table}[h]
+    \centering
+    \caption{Model Comparison: Random Forest Classifiers with and without Skill Distance}
+    \renewcommand{\arraystretch}{1.2} 
+    \begin{tabular}{lcc}
+    \hline
+    \textbf{Model} & \textbf{AUC Score} \\
+    \hline
+    Full Model (with Skill Distance) & 0.600 \\
+    Model without Skill Distance & 0.500 \\
+    \hline
+    \end{tabular}
+    \label{tab:model_comparison}
+\end{table}
+
+
+The full model, which includes skill distance, achieves an AUC of 0.600, while the model without skill distance yields an AUC of 0.500 - equivalent to a classifier with no predictive ability. This stark contrast in performance underscores the remarkable predictive power of the skill distance measure in internal selection processes. Despite the clear variation in other observed features such as tenure, total experience, job categories, and proficiency ratings, skill distance alone accounts for nearly all predictable variation in selection outcomes. Among this set of observed features, the skill distance measure between an applicant's current job and the sought vacancy contributes virtually all the predictive power for selection decisions in our setting.
+
+This finding is particularly noteworthy given that we derived our measure from job descriptions, which are generally less sensitive than other HR data. While firms often possess additional potentially predictive features, these may be subject to privacy concerns or legal restrictions. Our approach demonstrates that valuable insights can be derived from less sensitive data sources, advancing the field of people analytics while maintaining ethical data practices. Moreover, the granularity of our skill distance measure appears to capture nuanced differences between roles that categorical variables like performance ratings may miss, especially when applicants cluster in just one or two groups.
+
+
+The significant predictive power of our analysis validates that job postings contain meaningful information about position requirements and worker-job fit. While firms often possess additional potentially predictive features, our results demonstrate that posting content alone captures substantial signal about skill requirements. That this prediction comes from job descriptions, which are generally less sensitive than other HR data, suggests postings are an underutilized source of information about skill requirements in labor markets. This validation of posting informativeness through selection outcomes supports their growing use in labor market analytics and tools while highlighting opportunities for deeper analysis of skill requirements and worker-job matching. 
+
+
+\section{Decoding Internal Mobility Patterns}\label{sec:internal_mobility_patterns}
+
+
+Having developed a measure of skill distance between positions based on job postings and validating it, we explore how this can be applied to understand mobility patterns within the firm. The measure quantifies the distance between skills and tasks enumerated in job postings and assesses selection chances of candidates for new vacancies. In this section, we apply the skill distance metric to study how internal candidates' application behaviors vary based on their prospects at the time of application. By capturing predictable variation in selection, this measure enables a more nuanced examination of internal transitions and application patterns. The firm can now pose more sophisticated queries about internal mobility. For instance, it can now assess for any employee the proportion of new vacancies where their skill distance suggests a high probability of selection based on historical patterns. Central to our empirical investigation is the average skill distance measure, which assesses an employee's prospects for movement within the firm. From an internal applicant's perspective, if many vacancies share skills similar to their current job, their prospects are good; if most vacancies are distant, their prospects are weaker. We first develop this average skill similarity measure, then proceed to a detailed empirical analysis of application patterns and internal mobility. This analysis opens up new possibilities for understanding and supporting workforce development.
+
+
+
+
+\subsection{Average Skill Distance}
+
+To formalize the concept of average skill distance introduced above, we define the following metric:
+
+\begin{equation}
+    \overline{d}_{j_c, t} = \frac{1}{|J_t|} \sum_{j_v \in J_t} d(j_c, j_v)
+\end{equation}
+
+where $\overline{d}_{j_c, t}$ represents the average distance to job postings at time $t$, $J_t$ is the set of job postings in time window $t$, and $d(j_c, j_v)$ is the distance between the current job $j_c$ and a vacancy $j_v$. In our empirical analysis, we compute this measure for each internal applicant, considering all vacancies in a 30-day window prior to their observed application. This approach allows us to quantify an employee's prospects at the time of application, as discussed in the preceding paragraph. The distribution of $\overline{d}_{j_c, t}$, illustrated in \autoref{fig:s_dist_hist}, reveals notable heterogeneity in applicants' average skill distances, providing a foundation for our subsequent analysis of application patterns and internal mobility.
+
+\begin{figure}[h]
+    \begin{center}
+        \begin{minipage}{\textwidth}
+            \centering
+            \includegraphics[width=0.8\textwidth,height=0.4\textheight]{new_img/histogram_prosp.png}
+            \caption{Distribution of Average Skill Distance (\(\overline{d}_{j_c, t}\))}
+            \label{fig:s_dist_hist}
+        \end{minipage}
+    \end{center}
+\end{figure}
+
+
+
+
+\subsection{Empirical Analysis}
+
+Our focus is to develop an understanding of how skill match to vacancies, which we can now measure, affects application patterns. Applying is a key step in the internal mobility process and the stage of the search process that can be observed. We will look at two aspects of the application process: its directness and intensity. Directness corresponds to whether the applicant is applying to positions where they have a higher probability of securing a job, measured using the skill distance. Intensity captures how many positions the applicant applies to. Both directedness and intensity improve the probability of moving to a new position within the firm. From the firm's perspective, understanding how application behavior predictably varies enables them to tweak processes to support employee mobility within the organization. Our empirical investigation focuses on three key patterns in application behavior as they relate to the average skill distance measure, and we present our findings for each of these patterns in the following sub-sections.
+
+
+\subsubsection{Average Skill Distance and Application Intensity}
+
+The relationship between an applicant's average skill distance to available vacancies and the positions they choose to apply for provides crucial insights into internal mobility patterns. We investigate whether a higher average skill distance is associated with applying to closer or farther positions in terms of skill requirements. This analysis helps us understand how employees navigate their career paths within the firm when faced with varying degrees of skill alignment with available opportunities.
+
+Applicants with a high average skill distance to vacancies face a potentially smaller set of opportunities that closely align with their existing skillset. This situation presents a dilemma: do these employees constrain their applications to fewer, more closely aligned positions, or do they make more exploratory applications to positions that require significant skill development? Conversely, applicants whose skillsets are closer to the available vacancies might be less inclined to seek positions that require learning new technologies or skills.
+
+To empirically examine how skill remoteness affects application behavior, we estimate the following model:
+
+\begin{equation}
+    d_{j_v, j_c} = \beta_0 + \beta_1 \overline{d}_{j_c, t} + \epsilon
+\end{equation}
+
+$d_{j_v, j_c}$ is the standardized skill distance between the current job $j_c$ and the job applied for $j_v$, and $\overline{d}_{j_c, t}$ is the standardized average skill distance to vacancies.
+
+
+\begin{table}[h]
+\centering
+\caption{Average Skill Distance and Application Intensity} 
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc}
+\hline
+\textbf{Variable} & \textbf{Coefficient} & \textbf{Std. Error} \\
+\hline
+Constant & 2.945e-16 & 0.022 \\
+$\overline{d}_{j_c, t}$ (std) & 0.6093*** & 0.025 \\
+\hline
+R-squared & \multicolumn{2}{c}{0.371} \\
+\hline
+\multicolumn{3}{l}{*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+\end{tabular}
+\label{tab:skill_remote_app}
+\end{table}
+
+The results presented in Table \ref{tab:skill_remote_app} reveal a strong positive association between $\overline{d}_{j_c, t}$ and $d_{j_v, j_c}$. Specifically, we find that a one standard deviation increase in average skill distance to vacancies is associated with a 0.6093 standard deviation increase in the distance to the position applied for. This substantial and statistically significant effect suggests that applicants with higher skill remoteness are more likely to apply to positions that are farther away in terms of skillset. The application patterns here confirm that when faced with a higher average distance to available vacancies, applicants make more exploratory choices. Rather than constraining their applications to a narrower set of closely aligned positions, employees appear to broaden their search, potentially seeking opportunities that require attaining new skills and capitalize on the firm's knowledge of the applicant's performance in the current role which cannot be easily conveyed when applying to a position outside the firm. We already know that applying to a more distant position reduce selection chances, but will examine this more closely. 
+
+
+
+
+\subsubsection{Average Skill Distance and Selection Probability}
+
+We've already seen that skill distance is inversely linked to selection probability, and that applicants facing higher average skill distance to the set of vacancies tend to apply to more distant positions. Connecting these dots, we expect that applicants dealing with higher average skill distances to vacancies are less likely to get selected. We examine this here:
+
+
+\begin{equation}
+\text{logit}(P(S_{v,c} = 1)) = \beta_0 + \beta_1 \times \mathbb{I}[\text{above}]_{j_v,j_c}
+\end{equation} 
+
+$S_{v,c} = 1$ is a binary variable indicating whether an applicant with current job $j_c$ is selected for the job vacancy they applied to $j_v$. The variable $\mathbb{I}[\text{above}]_{j_v,j_c}$ is an indicator function that equals 1 if the skill distance between $j_c$ and $j_s$ is above the median, and 0 otherwise. Table \ref{tab:selection_prob} presents the results of this logistic regression:
+
+\begin{table}[h]
+\centering
+\caption{Logistic Regression Results: Impact of Skill Distance on Selection Probability} 
+\renewcommand{\arraystretch}{1.2} % Increased spacing
+\begin{tabular}{lcc}
+\hline
+\textbf{Variable} & \textbf{Coefficient} & \textbf{Std. Error} \\
+\hline
+Constant & -0.0061 & 0.078 \\
+Above Median & -0.4083*** & 0.112 \\
+\hline
+Log-Likelihood & \multicolumn{2}{c}{-895.62} \\
+\hline
+\multicolumn{3}{l}{\footnotesize{*** p$<$0.01, ** p$<$0.05, * p$<$0.1}} \\
+\end{tabular}
+\label{tab:selection_prob}
+\end{table}
+
+The results align with our expectations. Applicants with above-median skill distance to the vacancies have a 33.5\% lower likelihood of being selected into their position. With this we clearly see that the avg. skill distance to the vacancies affect the applicant's ability to secure an internal position with the same effort. The natural follow up and closely aligned question is of the intensity of the application process which we take up next.
+
+
+\subsubsection{Average Skill Distance and Application Intensity}
+
+We will now examine whether the application intensity—the number of vacancies an applicant applies to—varies with their average skill distance to the vacancy set. We already know that applicants faced with a high $d_{c,t}$ apply to more distant positions and are less likely to be selected. Our goal here is to inquire whether they also apply to more positions. For this analysis, we slightly modify our approach to constructing application windows. We define each window as a sequence of applications where the gap between any two consecutive applications does not exceed 30 days. This allows for windows that may span longer than 30 days, provided no two consecutive applications within the window are more than 30 days apart. We estimate the following regression:
+
+\begin{equation}
+    A_{i,t} = \beta_0 + \beta_1 \mathbb{I}[\text{above}]_{i,t} + \epsilon
+\end{equation}
+
+Here, $A_{i,t}$ is the number of applications person $i$ submits in time window $t$, and $\mathbb{I}[\text{above}]_{i,t}$ indicates if their skill remoteness is above the median.
+
+
+\begin{table}[h]
+\centering
+\caption{Average Skill Distance and Application Intensity}
+\renewcommand{\arraystretch}{1.2} % Increased spacing
+\begin{tabular}{lcc}
+\hline
+\textbf{Variable} & \textbf{Coefficient} & \textbf{Std. Error} \\
+\hline
+Constant & 1.8210*** & 0.137 \\
+Above Median & 0.5334*** & 0.205 \\
+\hline
+Observations & \multicolumn{2}{c}{637} \\
+R-squared & \multicolumn{2}{c}{0.011} \\
+\hline
+\multicolumn{3}{l}{\small{*** p$<$0.01, ** p$<$0.05, * p$<$0.1}} \\
+\end{tabular}
+\label{tab:skill_remote_intensity} 
+\end{table}
+
+
+Table \ref{tab:skill_remote_intensity} shows that applicants with above-median skill remoteness apply to about 1.5 times more positions on average. Faced with diminished prospects for their skillset within firm opportunities, they adopt a more exploratory approach when seeking a new position. Putting all our findings together, we get a clearer picture of how skill remoteness to the new vacancies shape internal job applications within the firm. Applicants with higher skill distance to the vacancies tend to apply to jobs that are more distant in terms of skills, face lower chances of being selected, and submit more applications on average. In other words our skill distance measure has allowed to bring out distinct difference in the application patterns to new vacancies. With this understanding, the natural follow up question is how we can fine-tune internal mobility processes in the firm? which we take up next.
+
+
+
+
+\subsection{From Mobility Patterns to Practice}
+
+In a technology-focused firm, understanding and supporting internal mobility requires a clear view of how employees' current skills align with emerging requirements. Our analysis of job posting content reveals striking patterns in how employees navigate opportunities based on their skill-fit - patterns that would be difficult to discern without validated measures of skill distance. Employees whose skills closely match emerging opportunities often adopt a passive approach despite higher chances of success, while those facing larger skill distances pursue positions more actively but with lower success rates.
+
+These empirically-documented patterns point to a clear quantitative framework for workforce development. When employees' skills align well with vacancies but application rates are low, the primary barrier appears to be search friction rather than skill gaps. As \autocite{invisiblehand} note, managerial initiative in surfacing opportunities can be crucial in large firms. Conversely, when employees face high average skill distances to vacancies and apply actively but unsuccessfully, the evidence suggests skill development needs rather than search frictions limit mobility. This ability to distinguish between friction and skill gap challenges using posting content enables firms to develop targeted interventions.
+
+While our analysis illuminates these distinct patterns, moving from measurement to practice requires careful consideration. For employees with low average skill distance who do apply, the data supports proactive opportunity identification. However, for those not observed applying, questions remain about how best to surface relevant opportunities. Similarly, the application patterns of employees facing larger skill distances provide valuable signals about career directions they see as feasible or desirable - opening new possibilities for studying how employees navigate skill requirements in modern careers. This suggests rich possibilities for building systematic, evidence-based approaches to workforce development by leveraging the skill information in job postings. Rather than relying on generic mobility programs, firms can use posting content to quantify where reducing search frictions versus supporting skill development would be most valuable, while gaining deeper insight into how employees approach career development in environments of evolving skill demands.
+
+
+\section{Conclusion and Discussion}\label{sec:conclusion_discussion}
+
+
+We test the informativeness of job posting content by examining how well it predicts selection decisions in the internal labor market of a large division at a major firm. Our analysis reveals that skill descriptions in job postings strongly discriminate between candidates' fit to new positions - the probability of selection is 84\% higher when comparing applications with the closest versus furthest skill distance. While our evidence comes from a single firm, the ability to observe both successful and unsuccessful applications provides a unique window into how posting content relates to actual selection decisions. This validation complements the growing ecosystem of labor market analytics and research built on job posting datasets by demonstrating that posting content captures meaningful differences in worker-job fit.
+
+We transform standard process data - job postings and selection decisions - into actionable insights about workforce development. By measuring skill distances between current and potential positions, we identify where search frictions impede well-matched candidates and where significant skill gaps exist relative to emerging opportunities. The marked heterogeneity in application intensity, linked directly to skill alignment with current vacancies, suggests employees actively balance immediate fit against skill development opportunities. This capability to distinguish between matching and skill development challenges while revealing how employees navigate evolving skill requirements represents a concrete advance in HR analytics.
+
+Beyond validating posting informativeness through selection outcomes, our work demonstrates how firms can develop empirically-grounded approaches to workforce analytics. The combination of detailed posting content with observed mobility decisions enables systematic investigation of career dynamics within firms. While our findings establish the potential of posting-based analytics, realizing this potential requires sustained work in developing frameworks that effectively leverage this information source. The growing availability of systematic labor market data suggests rich possibilities for combining internal posting measures with external data to deepen our understanding of skill requirements and career mobility.
+
+By demonstrating that posting content contains meaningful, predictive information about skills and job requirements, we provide empirical support for the growing use of posting-based analytics while illuminating new possibilities for research and practice. Our results suggest firms can move beyond conventional HR metrics to develop validated measures of worker-job fit that guide specific interventions. This capability to link posting content to outcomes positions job postings as a valuable but underutilized source of information for understanding and facilitating internal mobility in modern labor markets.
+
+
+
+
+
+\newpage
+
+\printbibliography
+
+\newpage % Start a new page for the appendix
+
+\appendix % Switch to appendix mode
+
+
+
+\section{Sample Job Description}
+
+\begin{tcolorbox}[colback=boxbackground,colframe=boxframe,sharp corners]
+
+\noindent \textbf{Overview}\\
+We are one of the world’s leading financial institutions ... and risk management products and services.
+
+\noindent \textbf{Process Overview}\\
+Build and evolve a consistent Authorized Data Source within Consumer \& Small Business Bank (CSBB) ... both the strategic and tactical analytics needs of the Consumer Bank.
+
+\noindent \textbf{Job Description}\\
+Hadoop developer for multiple initiatives. Develop Big Data Strategy and Roadmap for the Enterprise. Experience in Capacity Planning, Cluster Designing and Deployment. Benchmark systems, analyze system bottlenecks, and propose solutions to eliminate them. Develop highly scalable and extensible Big Data platform, which enables collection, storage, modeling, and analysis of massive data sets from numerous channels. Continuously evaluate new technologies, innovate and deliver solution for business-critical applications.
+
+\noindent \textbf{Responsibilities}\\
+Assists the team with the design of the architect layer to ensure re-usable metrics and attributes within the reporting layer. Responsible for creating and maintaining necessary documentation (MDR) to ensure audit readiness where necessary. Prototype improvement ideas. Work effectively with the global team. Expected to play technical leadership as an individual contributor. Articulate challenges, propose and drive solutions ...
+
+\noindent \textbf{Mandatory Skills}\\
+Extensive knowledge of Hadoop stack and storage technologies HDFS, MapReduce, Yarn, HIVE, sqoop, Impala, spark, flume, kafka and oozie. Extensive Knowledge on Bigdata Enterprise architecture (Cloudera preferred). Experience in No SQL Technologies (Cassandra, Hbase).
+
+\noindent \textbf{Desired Skills}\\
+Experience in Real time streaming (Kafka). Experience with Big Data Analytics \& Business Intelligence and Industry standard tools integrated with Hadoop ecosystem. (R , Python ). Visual Analytics Tools knowledge (Tableau ). Data Integration, Data Security on Hadoop ecosystem. (Kerberos ). Awareness or experience with Data Lake with Cloudera ecosystem.
+\end{tcolorbox} 
+
+\captionof{figure}{This is a more detailed version of a sample vacancy posting with only information about the firm and the relevant sub-division redacted.}
+
+
+
+
+\end{document}
