@@ -1,79 +1,76 @@
+
+
 \section{Introduction}
 
-
 Major corporations like Google, Walmart, and IBM, along with other public and private agencies, have committed to 
-skills-based hiring policies, focusing on capabilities rather than traditional credentials such as degrees or 
-work experience \parencite{hbr2022skillsbased, mckinsey2020future, wef2020jobs}. This shift comes at a time when 
-employees increasingly pursue less fixed career paths both within and across firms, and when the skills required to 
-perform modern work evolve rapidly. These forces compel firms to articulate skill requirements and job responsibilities 
-with greater precision in their postings. This information is not only consumed by potential applicants—it is embedded 
-in the algorithms used by platforms like Indeed and LinkedIn to curate and match opportunities to candidates, and 
-ingested by sophisticated screening tools that shortlist applicant resumes based on fit against these requirements. 
-Job postings and their content are also systematically harvested by specialized firms like Revelio and Lightcast, 
-who package this data into analytical products that provide insights into workforce skill requirements across 
-industries\footnote{The workforce analytics provided by firms like Revelio and Lightcast have not only supported 
-businesses but also spurred a growing body of academic research that study trends in skill demands and 
-job creation \parencite{goldfarb2020artificial, azar2020concentration}, and otter critical labor market 
-phenomena \parencite{hershbein2018recessions, forsythe2020labor, braxton2023technological}.}. These 
-developments underscore the growing importance of job postings as a key source of valuable information 
-at the analytical, strategic, and policy levels.
+skills-based hiring policies, focusing on capabilities rather than traditional credentials such as degrees or work 
+experience \citep{hbr2022skillsbased, mckinsey2020future, wef2020jobs}. This shift comes at a time when employees 
+increasingly pursue less fixed career paths both within and across firms, and when the skills required to perform 
+modern work evolve rapidly. These forces compel firms to articulate skill requirements and job responsibilities 
+with greater precision in their postings. This information is not only consumed by potential applicants—it is 
+embedded in the algorithms used by platforms like Indeed and LinkedIn to curate and match opportunities to 
+candidates, and ingested by sophisticated screening tools that shortlist applicant resumes based on fit against 
+these requirements. Job postings and their content are also systematically harvested by specialized firms like 
+Revelio and Lightcast, who package this data into analytical products that provide insights into workforce skill 
+requirements across industries\footnote{The workforce analytics provided by firms like Revelio and Lightcast have 
+not only supported businesses but also spurred a growing body of academic research that study trends in skill 
+demands and job creation \citep{goldfarb2020artificial, azar2020concentration}, and other critical labor market 
+phenomena \citep{hershbein2018recessions, forsythe2020labor, braxton2023technological}.}. These developments 
+underscore the growing importance of job postings as a key source of valuable information at the analytical, 
+strategic, and policy levels.
 
-
-Despite this growing centrality of job posting content and significant investment in its analysis, no rigorous 
-validation exists of whether posting-derived skill measures predict actual selection and mobility outcomes. While 
-firms are investing in more detailed skill descriptions, and sophisticated tools are being built to extract and analyze 
-this content, consumers of posting-based analytics and tools operate without clear evidence of informativeness. 
-Legitimate concerns exist - postings might be aspirational rather than realistic, could be template-driven or overly generic, 
-and might list "nice to have" skills rather than true requirements. Understanding how informative these postings are for 
+Despite this growing centrality of job posting content and significant investment in its analysis, no rigorous validation 
+exists of whether posting-derived skill measures predict actual selection and mobility outcomes. While firms are 
+investing in more detailed skill descriptions, and sophisticated tools are being built to extract and analyze this content, 
+consumers of posting-based analytics and tools operate without clear evidence of informativeness. Legitimate concerns 
+exist - postings might be aspirational rather than realistic, could be template-driven or overly generic, and might 
+list ``nice to have" skills rather than true requirements. Understanding how informative these postings are for 
 measuring skill requirements is crucial for the growing ecosystem of tools and analytics being built on this content. 
-The ability to validate posting-derived measures against selection decisions would inform both current applications and 
-future innovations.
+The ability to validate posting-derived measures against selection decisions would inform both current applications 
+and future innovations.
 
+We partner with the IT division of a major financial services firm to study the informativeness of job postings by 
+linking it to actual workers and their mobility process. This setting provides an ideal laboratory - the firm's 
+hiring process generates detailed position requirements through job postings, which multiple internal candidates 
+consider and apply to. The firm's internal job board offers comprehensive records of both successful and unsuccessful 
+applications over multiple years. Crucially, we can link the applicants to the postings of their current job and 
+observe both successful and unsuccessful applications, providing the opportunity to assess the informative content 
+in job postings to predict selection. By structuring a prediction problem, we can examine whether the skill 
+distances derived from posting content meaningfully predict selection outcomes, thereby contributing a first of 
+its kind estimate of the nature and level of informativeness in job postings; an information source of increasing 
+application inside and outside the firm.
 
-We partner with the IT division of a major financial services firm to study the informativeness of job postings by linking 
-it to actual workers and their mobility process. This setting provides an ideal laboratory - the firm's hiring process 
-generates detailed position requirements through job postings, which multiple internal candidates consider and apply to. 
-The firm's internal job board offers comprehensive records of both successful and unsuccessful applications over multiple 
-years. Crucially, we can link the applicants to the postings of their current job and observe both successful and 
-unsuccessful applications, providing the opportunity to assess the informative content in job postings to predict selection. 
-By structuring a prediction problem, we can examine whether the skill distances derived from posting content meaningfully 
-predict selection outcomes, thereby contributing a first of its kind estimate of the nature and level of informativeness in 
-job postings; an information source of increasing application inside and outside the firm.
+Our analysis reveals substantial predictive power in posting-derived skill measures. The probability of selection 
+decreases by 84\% when comparing applications in the lowest versus highest quintile of skill distance, indicating 
+posting content captures meaningful differences in worker-job fit. This predictive power is particularly evident 
+when examining vacancies with multiple applicants - in 70\% of these cases, the candidate with the shortest skill 
+distance was selected. The predictive relationship holds both across vacancies and within applicants (across their 
+different applications). Notably, traditional employee characteristics like age, tenure, and work experience 
+contribute minimally beyond the skill distance measure - suggesting the rich information in job postings dominates 
+standard observable characteristics in explaining selection outcomes.
 
-Our analysis reveals substantial predictive power in posting-derived skill measures. The probability of selection decreases 
-by 84\% when comparing applications in the lowest versus highest quintile of skill distance, indicating posting content 
-captures meaningful differences in worker-job fit. This predictive power is particularly evident when examining vacancies 
-with multiple applicants - in 70\% of these cases, the candidate with the shortest skill distance was selected. The 
-predictive relationship holds both across vacancies and within applicants (across their different applications). Notably, 
-traditional employee characteristics like age, tenure, and work experience contribute minimally beyond the skill distance 
-measure - suggesting the rich information in job postings dominates standard observable characteristics in explaining 
-selection outcomes.
-
-
-The first step in our machine learning pipeline converts the key information in a job posting to a job skill-embedding by 
-mapping it in the language space of a pre-trained language model. While these embeddings capture rich semantic relationships 
-in general language, our context of technical skills and responsibilities likely lies in a much lower dimensional space. 
-Moreover, with relatively few selection decisions compared to the embedding dimensions, we need dimension reduction to 
-enable effective learning of the distance metric. The distance metric learning, akin to fine-tuning the general 
-language model's notion of similarity for our specific context, reveals meaningful skill relationships. This learned 
-representation's validity is demonstrated through its strong predictive power on held-out selection decisions, and 
-its application reveals novel patterns in how employees navigate opportunities based on skill-fit.
-
+The first step in our machine learning pipeline converts the key information in a job posting to a job skill-embedding 
+by mapping it in the language space of a pre-trained language model. While these embeddings capture rich semantic 
+relationships in general language, our context of technical skills and responsibilities likely lies in a much 
+lower dimensional space. Moreover, with relatively few selection decisions compared to the embedding dimensions, 
+we need dimension reduction to enable effective learning of the distance metric. The distance metric learning, 
+akin to fine-tuning the general language model's notion of similarity for our specific context, reveals meaningful 
+skill relationships. This learned representation's validity is demonstrated through its strong predictive power on 
+held-out selection decisions, and its application reveals novel patterns in how employees navigate opportunities 
+based on skill-fit.
 
 We apply the skill distance measure to investigate internal job application patterns, revealing another dimension of 
 job posting informativeness. Those whose skills closely match available vacancies adopt a relatively passive approach 
 despite higher chances of success, while employees facing larger skill distances actively pursue positions requiring 
-skill development. By structuring standard posting and mobility data, we show how posting-derived analytics can 
-generate actionable insights about whether reducing search frictions or investing in skill development should be 
-prioritized. Such capabilities suggest a promising direction for HR analytics, a field that has seen limited 
-advancement despite significant interest \parencite{Tambe2019} - the combination of skill information in job 
-postings and mobility patterns enables rich workforce analytics. Our analysis reveals novel patterns about 
-internal mobility, providing evidence about job search behavior in an environment characterized by employed 
-workers navigating evolving skill requirements - a setting distinct from traditional unemployment-focused 
-search models. This ability to measure skill requirements from job postings and track mobility decisions 
-opens new possibilities for personnel economics research to systematically investigate career navigation 
-and skill development choices.
-
+skill development. By structuring standard posting and mobility data, we show how posting-derived analytics can generate 
+actionable insights about whether reducing search frictions or investing in skill development should be prioritized. 
+Such capabilities suggest a promising direction for HR analytics, a field that has seen limited advancement despite 
+significant interest \citep{Tambe2019} - the combination of skill information in job postings and mobility patterns 
+enables rich workforce analytics. Our analysis reveals novel patterns about internal mobility, providing evidence 
+about job search behavior in an environment characterized by employed workers navigating evolving skill requirements 
+- a setting distinct from traditional unemployment-focused search models. This ability to measure skill requirements 
+from job postings and track mobility decisions opens new possibilities for personnel economics research to 
+systematically investigate career navigation and skill development choices.
 
 Our paper illuminates the informative content in job postings by linking their skill and responsibility descriptions 
 to selection outcomes and application decisions. Through selection prediction, we provide first validation that 
@@ -84,74 +81,71 @@ potential for firms to gain insights about internal mobility and its relationshi
 posting information, while opening new research possibilities in understanding how employees navigate careers 
 in environments characterized by evolving skill requirements.
 
-
-To summarize, this paper illuminates how  findings validate a fundamental data source driving major market decisions 
+To summarize, this paper illuminates how findings validate a fundamental data source driving major market decisions 
 while demonstrating rich analytical possibilities. By showing posting content contains meaningful skill information 
 that predicts outcomes, we inform the growing ecosystem of screening tools and analytics built on this content. The 
 results challenge pessimism about HR analytics by showing how posting information can guide specific 
-interventions - from reducing search frictions for well-matched workers to targeting skill development where 
-needed. This posting-based approach outperforms traditional collaborative filtering methods by leveraging the 
-rich content in job descriptions, opening new avenues for research in labor economics and personnel practices.
-
-
-
+interventions - from reducing search frictions for well-matched workers to targeting skill development where needed. 
+This posting-based approach outperforms traditional collaborative filtering methods by leveraging the rich content 
+in job descriptions, opening new avenues for research in labor economics and personnel practices.
 
 \textbf{Literature Review}
 
 A rich technical literature has explored approaches to job recommendation, worker-job matching, and skill 
 representation learning---supporting platforms that facilitate job search, candidate-opening matching, and 
 career trajectory modeling\footnote{The technical literature has included work on recommender systems 
-\cite{shaha2012survey,siting2012job} and representation learning \parencite{heap2014combining, 
-zhu2018person, liu2019tripartite, bian2020learning} to support platforms facilitating job search 
-\parencite{heap2014combining,giabelli2021skills2job}, matching jobs to candidates 
-\parencite{zhu2018person,qin2020enhanced} and modeling career paths and skill 
-recommendations \parencite{maurya2017bayesian, kokkodis2021demand}.}. While these advances demonstrate 
-sophisticated ways to process job posting content, they focus on improving platform functionality rather 
-than validating whether derived skill measures predict actual selection outcomes. The lack of selection data 
-in platform settings provides limited empirical motivation to evaluate the informativeness of posting-derived measures.
+\citep{shaha2012survey,siting2012job} and representation 
+learning \citep{heap2014combining, zhu2018person, liu2019tripartite, bian2020learning} to support 
+platforms facilitating job search \citep{heap2014combining,giabelli2021skills2job}, matching jobs 
+to candidates \citep{zhu2018person,qin2020enhanced} and modeling career paths and skill 
+recommendations \citep{maurya2017bayesian, kokkodis2021demand}.}. While these advances demonstrate 
+sophisticated ways to process job posting content, they focus on improving platform functionality 
+rather than validating whether derived skill measures predict actual selection outcomes. The lack of 
+selection data in platform settings provides limited empirical motivation to evaluate the informativeness of 
+posting-derived measures.
 
 Two papers studying internal labor markets highlight different approaches to measuring employee-position 
-fit. \textcite{devos2024data} develops a recommender system for internal positions, using collaborative 
-filtering based on observed transitions and employee features to generate position recommendations. 
-\textcite{2024_Cowgill} studies team assignment mechanisms, measuring fit through survey-based skill 
-scores validated by management. While these papers focus on different questions, both require some 
-measure of employee fit to new positions. Our approach leverages the rich skill information contained 
-in job postings, information these approaches do not utilize, to generate validated measures of fit that 
-require neither extensive mobility histories nor expert validation.
+fit. \citet{devos2024data} develops a recommender system for internal positions, using collaborative 
+filtering based on observed transitions and employee features to generate position 
+recommendations. \citet{2024_Cowgill} studies team assignment mechanisms, measuring fit through 
+survey-based skill scores validated by management. While these papers focus on different questions, 
+both require some measure of employee fit to new positions. Our approach leverages the rich skill 
+information contained in job postings, information these approaches do not utilize, to generate 
+validated measures of fit that require neither extensive mobility histories nor expert validation.
 
-Beyond algorithmic applications, a growing literature in management and economics leverages job posting text to 
-study labor market dynamics. Researchers have extracted signals from job descriptions to examine wage premia 
-\parencite{Bana2021}, analyze technology's impact on skill demands \parencite{George2024}, and forecast effects 
-of generative AI \parencite{eloundou2024gpts, 2024_Acemoglu}. Our setting of internal mobility enables validation 
-of the informativeness of these posting-derived measures through actual selection decisions. The finding that 
-skill-fit strongly predicts selection provides validation for this literature's use of posting text to 
-measure skill requirements.
+Beyond algorithmic applications, a growing literature in management and economics leverages job posting 
+text to study labor market dynamics. Researchers have extracted signals from job descriptions to examine 
+wage premia \citep{Bana2021}, analyze technology's impact on skill demands \citep{George2024}, and forecast 
+effects of generative AI \citep{eloundou2024gpts, 2024_Acemoglu}. Our setting of internal mobility enables 
+validation of the informativeness of these posting-derived measures through actual selection decisions. The 
+finding that skill-fit strongly predicts selection provides validation for this literature's use of posting 
+text to measure skill requirements.
 
 The Information Systems literature has studied algorithms that match workers to jobs and recommend skill 
-development \parencite{kokkodis2021demand, kokkodis2023good}, while also examining how to assess the value 
-of data for algorithmic applications \parencite{lei2024value}. These topics connect to our study of how 
-informative job postings are about skills and job requirements. Related to our validation focus, 
-\parencite{raghavan2020mitigating} documents limited transparency about how well automated screening 
+development \citep{kokkodis2021demand, kokkodis2023good}, while also examining how to assess the value of 
+data for algorithmic applications \citep{lei2024value}. These topics connect to our study of how informative 
+job postings are about skills and job requirements. Related to our validation focus, 
+\citet{raghavan2020mitigating} documents limited transparency about how well automated screening 
 systems predict actual selection outcomes - our demonstration that posting-derived skill measures 
 strongly predict selection provides a framework for building and evaluating such algorithms.
 
 Our analysis shows how incorporating skill similarity derived from job postings reveals distinct patterns 
 in internal mobility. Studying career moves and incentives is a rich literature in management research and 
-personnel economics - studies have documented patterns in internal moves \parencite{bidwell2024stepping} and 
-efficiency gains from internal hiring \parencite{bidwell2011paying}, while research spans from early work 
-on career incentives \parencite{baker1994internal, baker1994wage} to recent studies of internal labor 
-markets \parencite{tambe2020paying, huitfeldt2023internal}. Job posting content, we demonstrate, is a 
+personnel economics - studies have documented patterns in internal moves \citep{bidwell2024stepping} and 
+efficiency gains from internal hiring \citep{bidwell2011paying}, while research spans from early work on 
+career incentives \citep{baker1994internal, baker1994wage} to recent studies of internal labor 
+markets \citep{tambe2020paying, huitfeldt2023internal}. Job posting content, we demonstrate, is a 
 valuable but underutilized source of information that, when combined with mobility data, enables deeper 
-understanding of how employees navigate careers in environments requiring regular skill acquisition. 
-The patterns in how application intensity varies with skill-fit to emerging positions illustrates the 
-potential for enriching our understanding of modern career navigation.
+understanding of how employees navigate careers in environments requiring regular skill acquisition. The 
+patterns in how application intensity varies with skill-fit to emerging positions illustrates the potential 
+for enriching our understanding of modern career navigation.
 
-
-We proceed as follows: In Section \ref{sec:research_setting}, we describe the research setting, the firm, 
-data and the internal mobility process. In Section \ref{sec:objective_approach}, we outline the conceptual 
-ideas of the prediction problem. Section \ref{sec:machine_learning_pipeline} presents the machine learning 
-pipeline, the algorithms and details of data processing and implementation. In 
+We proceed as follows: In Section \ref{sec:research_setting}, we describe the research setting, the 
+firm, data and the internal mobility process. In Section \ref{sec:objective_approach}, we outline 
+the conceptual ideas of the prediction problem. Section \ref{sec:machine_learning_pipeline} presents 
+the machine learning pipeline, the algorithms and details of data processing and implementation. In 
 Section \ref{sec:evaluation_skill_distance}, we evaluate the effectiveness of the skill distance metric 
-in predicting selection outcomes in detail. In Section \ref{sec:internal_mobility_patterns} we apply the 
-distance measure to new positions to study application intensity to new positions vary with skill fit 
-and concluding in Section \ref{sec:conclusion_discussion}. 
+in predicting selection outcomes in detail. In Section \ref{sec:internal_mobility_patterns} we apply 
+the distance measure to new positions to study application intensity to new positions vary with skill 
+fit and concluding in Section \ref{sec:conclusion_discussion}.
+

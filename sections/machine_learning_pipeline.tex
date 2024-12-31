@@ -23,9 +23,9 @@ decisions.
 
 Here we describe the approach to mapping the extracted text to the embedding space of a pre-trained language model. 
 To create vector representations of the two parts we employ Sentence-BERT (SBERT), a modification of the pre-trained 
-BERT network \autocite{devlin2018bert}. SBERT is designed to derive semantically meaningful sentence embeddings, making 
+BERT network \citep{devlin2018bert}. SBERT is designed to derive semantically meaningful sentence embeddings, making 
 it more efficient for comparing longer text strings than BERT embeddings, which are typically word vectors, although 
-the BERT word-level embeddings vary with the context, unlike their predecessors \autocite{reimers-2019-sentence-bert}. 
+the BERT word-level embeddings vary with the context, unlike their predecessors \citep{reimers-2019-sentence-bert}. 
 SBERT converts text into dense vector representations, effectively capturing the semantic meanings and relationships 
 between words. This model is particularly suitable for our needs because it is pre-trained and fine-tuned for 
 similarity tasks, ensuring that it can generate fixed-size embeddings that are both informative and consistent. 
@@ -183,7 +183,7 @@ the sought vacancy description, and \(S_{v,c}\) is the binary selection indicato
 discriminate between skill distances in the set of \textit{plausible} applications, whose empirical counterpart is \(A\). 
 In other words, we want \(M\) such that the distance between cases that resulted in rejection is larger compared to cases 
 that resulted in selection. We utilize the past selection and rejection data to inform our metric learning process. 
-Specifically, we adopt the Mahalanobis Metric for Clustering (MMC) algorithm by \autocite{Xing2002} to learn a distance 
+Specifically, we adopt the Mahalanobis Metric for Clustering (MMC) algorithm by \citep{Xing2002} to learn a distance 
 function that can effectively differentiate between selected and non-selected candidates. The optimization problem solved 
 is the following: 
 
