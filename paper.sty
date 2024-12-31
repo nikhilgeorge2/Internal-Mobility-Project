@@ -237,17 +237,6 @@ Available at \url{#2}}}}
 \definecolor{boxbackground}{RGB}{245,245,245}
 \definecolor{boxframe}{RGB}{200,200,200}
 
-% ---- Custom enumeration for algorithms ----
-% Add to the existing enumitem settings
-\newlist{algosteps}{enumerate}{1}
-\setlist[algosteps]{
-  label=\textbf{Step \arabic*:},
-  leftmargin=*,
-  align=left,
-  itemsep=0.5em,
-  widest={Step 4:},
-  font=\normalfont
-}
 
 % ---- TikZ setup ----
 \usepackage{tikz}
@@ -284,8 +273,6 @@ Available at \url{#2}}}}
 % Enhance bibliography
 \usepackage{natbib}
 
-% Eliminate author-year separation in citations
-\setcitestyle{aysep={}}
 
 % Set font size in bibliography
 \renewcommand{\bibfont}{\small}
