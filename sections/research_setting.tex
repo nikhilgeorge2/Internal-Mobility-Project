@@ -1,142 +1,113 @@
+% Research Setting Section
 \section{Research Setting}\label{sec:research_setting}
 
 \subsection{Context}
 
-This section outlines our research setting within the Information Technology division of a prominent U.S.-based financial services institution. The division, 
-comprising multiple specialized units, provides technical support ranging from trading systems and wealth management platforms to enterprise-wide initiatives 
-like system modernization and compliance reporting. Several distinctive features make this setting ideal for validating posting informativeness: precise skill 
-specifications required for technical roles, diverse units generating varied requirements, and structured mobility processes yielding both successful and 
-unsuccessful applications.
+This section outlines our research setting within the Information Technology division of a prominent U.S.-based financial services institution. The division, comprising multiple specialized units, provides technical support ranging from trading systems and wealth management platforms to enterprise-wide initiatives like system modernization and compliance reporting. Several distinctive features make this setting ideal for validating posting informativeness: precise skill specifications required for technical roles, diverse units generating varied requirements, and structured mobility processes yielding both successful and unsuccessful applications.
 
-Within the division, specialized technical roles form the core workforce—application programmers developing trading platforms, data analysts supporting risk management, 
-and quality assurance specialists maintaining enterprise systems. Each position demands specific technical competencies, from programming languages and analytical 
-tools to testing frameworks and development methodologies. Such specialized requirements necessitate detailed articulation of skills in job postings, generating 
-rich content for examining whether posting-derived measures predict selection outcomes.
+Within the division, specialized technical roles form the core workforce---application programmers developing trading platforms, data analysts supporting risk management, and quality assurance specialists maintaining enterprise systems. Each position demands specific technical competencies, from programming languages and analytical tools to testing frameworks and development methodologies. Such specialized requirements necessitate detailed articulation of skills in job postings, generating rich content for examining whether posting-derived measures predict selection outcomes.
 
-A centralized job board facilitates internal mobility, where positions are posted with comprehensive skill and responsibility specifications 
-(see Box \ref{box:vacancy_posting} for a representative example). The organization maintains minimal restrictions on internal applications, allowing employees 
-to pursue roles aligned with their interests without prior managerial approval. Following application submission, recruiting units conduct initial screening and 
-interviews to identify suitable internal candidates. External candidates are considered only after a specified timeframe if no appropriate internal candidate emerges.
+A centralized job board facilitates internal mobility, where positions are posted with comprehensive skill and responsibility specifications (see Box \ref{box:vacancy_posting} for a representative example). The organization maintains minimal restrictions on internal applications, allowing employees to pursue roles aligned with their interests without prior managerial approval. Following application submission, recruiting units conduct initial screening and interviews to identify suitable internal candidates. External candidates are considered only after a specified timeframe if no appropriate internal candidate emerges.
 
-The organization's structured internal mobility process generates substantial variation in both applications and outcomes across positions. The standardized posting and 
-evaluation procedures, combined with comprehensive data capture of both successful and unsuccessful applications, provide the essential elements for validating posting 
-informativeness through actual selection decisions. This combination of detailed technical postings, standardized processes, and comprehensive outcome data makes the 
-setting particularly suitable for our research objectives.
+The organization's structured internal mobility process generates substantial variation in both applications and outcomes across positions. The standardized posting and evaluation procedures, combined with comprehensive data capture of both successful and unsuccessful applications, provide the essential elements for validating posting informativeness through actual selection decisions. This combination of detailed technical postings, standardized processes, and comprehensive outcome data makes the setting particularly suitable for our research objectives.
 
 \subsection{Data}
 
-Our analysis draws on comprehensive data from the firm's Human Resource Information System (HRIS), which captures all job requisitions, applications, and selection outcomes. 
-Each record includes complete job posting content, application details, and final decisions. A crucial feature for our research design lies in our ability to link internal 
-applications to the detailed posting of the applicant's current position at application time, enabling direct comparison of skill requirements between current and sought positions.
+Our analysis draws on comprehensive data from the firm's Human Resource Information System (HRIS), which captures all job requisitions, applications, and selection outcomes. Each record includes complete job posting content, application details, and final decisions. A crucial feature for our research design lies in our ability to link internal applications to the detailed posting of the applicant's current position at application time, enabling direct comparison of skill requirements between current and sought positions.
 
 \begin{table}[t]
     \caption{Job Postings and Internal Mobility (2018-2021)}
     \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lrrr}
     \toprule
-    Year & Total Positions & Internal Applications (%) & Internal Fills (%) \
+    Year & Total Positions & Internal Applications (\%) & Internal Fills (\%) \\
     \midrule
-    2018 & 1,326 & 40.3 & 8.3 \
-    2019 & 1,370 & 50.1 & 17.3 \
-    2020 & 1,606 & 75.7 & 42.5 \
-    2021 & 2,240 & 62.5 & 33.9 \
-    \addlinespace
-    Total & 6,542 & 58.6 & 27.3 \
+    2018 & 1,326 & 40.3 & 8.3 \\
+    2019 & 1,370 & 50.1 & 17.3 \\
+    2020 & 1,606 & 75.7 & 42.5 \\
+    2021 & 2,240 & 62.5 & 33.9 \\
+    \midrule
+    Total & 6,542 & 58.6 & 27.3 \\
     \bottomrule
-    \multicolumn{4}{l}{\footnotesize \textit{Notes:} Data from HRIS covering 2018-2021, supplemented by 1,638 pre-2018 position postings.} \
-    \multicolumn{4}{l}{\footnotesize Internal Applications (%) represents positions receiving at least one internal application.} \
-    \multicolumn{4}{l}{\footnotesize Internal Fills (%) represents positions filled by internal candidates.} \
-    \label{tab:summary}
+    \multicolumn{4}{p{\textwidth}}{\footnotesize \textit{Notes:} Data from HRIS covering 2018-2021, supplemented by 1,638 pre-2018 position postings. Internal Applications (\%) represents positions receiving at least one internal application. Internal Fills (\%) represents positions filled by internal candidates.} \\
     \end{tabular*}
+    \label{tab:summary}
 \end{table}
 
-
-Table \ref{tab:summary} presents our dataset covering individual contributor positions posted between 2018-2021. The observation window captures 6,542 positions, with 
-3,836 (58.6\%) receiving internal applications and 1,789 (27.3\%) filled internally. This data is supplemented by 1,638 pre-2018 position postings, enabling broader 
-coverage when analyzing internal applicants' current positions. The data shows a notable increase in internal mobility over the observation period, with the proportion 
-of positions receiving internal applications rising from 40.3% in 2018 to 62.5% in 2021.
+Table \ref{tab:summary} presents our dataset covering individual contributor positions posted between 2018-2021. The observation window captures 6,542 positions, with 3,836 (58.6\%) receiving internal applications and 1,789 (27.3\%) filled internally. This data is supplemented by 1,638 pre-2018 position postings, enabling broader coverage when analyzing internal applicants' current positions. The data shows a notable increase in internal mobility over the observation period, with the proportion of positions receiving internal applications rising from 40.3\% in 2018 to 62.5\% in 2021.
 
 \begin{table}[t]
     \caption{Structure of HRIS Data}
     \begin{tabular*}{\textwidth}{@{\extracolsep\fill}lllllcc}
     \toprule
-    Date & Requisition ID & Job Description & Applicant ID & Employee ID & Internal & Selection \
+    Date & Requisition ID & Job Description & Applicant ID & Employee ID & Internal & Selection \\
     \midrule
-    2021-03 & REQ2021-456 & Hadoop Developer & APP-7K89 & EMP-123 & Yes & Selected \
-    2021-03 & REQ2021-456 & Hadoop Developer & APP-7K90 & EMP-124 & Yes & Not Selected \
-    2021-03 & REQ2021-456 & Hadoop Developer & APP-7K91 & -- & No & Not Selected \
-    2021-04 & REQ2021-457 & Data Analyst & APP-7K92 & -- & No & Selected \
-    \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \
-    2021-05 & REQ2021-459 & Sr. Developer & APP-7L95 & EMP-127 & Yes & Selected \
-    2021-05 & REQ2021-459 & Sr. Developer & APP-7L96 & -- & No & Not Selected \
-    \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \
-    2021-06 & REQ2021-460 & ML Engineer & APP-7M01 & EMP-130 & Yes & Not Selected \
+    2021-03 & REQ2021-456 & Hadoop Developer & APP-7K89 & EMP-123 & Yes & Selected \\
+    2021-03 & REQ2021-456 & Hadoop Developer & APP-7K90 & EMP-124 & Yes & Not Selected \\
+    2021-03 & REQ2021-456 & Hadoop Developer & APP-7K91 & -- & No & Not Selected \\
+    2021-04 & REQ2021-457 & Data Analyst & APP-7K92 & -- & No & Selected \\
+    \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+    2021-05 & REQ2021-459 & Sr. Developer & APP-7L95 & EMP-127 & Yes & Selected \\
+    2021-05 & REQ2021-459 & Sr. Developer & APP-7L96 & -- & No & Not Selected \\
+    \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+    2021-06 & REQ2021-460 & ML Engineer & APP-7M01 & EMP-130 & Yes & Not Selected \\
     \bottomrule
-    \multicolumn{7}{l}{\footnotesize \textit{Notes:} Sample entries from HRIS. Employee ID is populated for internal applicants or when external} \
-    \multicolumn{7}{l}{\footnotesize candidates are selected. Job Description field contains complete posting content (see Box \ref{box:vacancy_posting})} \
-    \multicolumn{7}{l}{\footnotesize for representative example of full posting content. Internal flag indicates current employee status.} \
-    \label{tab:hris_structure}
+    \multicolumn{7}{p{\textwidth}}{\footnotesize \textit{Notes:} Sample entries from HRIS. Employee ID is populated for internal applicants or when external candidates are selected. Job Description field contains complete posting content (see Box \ref{box:vacancy_posting}) for representative example of full posting content. Internal flag indicates current employee status.} \\
     \end{tabular*}
+    \label{tab:hris_structure}
 \end{table}
 
-
-The structure of our HRIS data appears in Table \ref{tab:hris_structure}, which illustrates the comprehensive information available for each application. The system records 
-application timing, position details, applicant information, and selection outcomes. Crucially, for internal applicants, employee identifiers enable linking to their current 
-positions and corresponding job postings. This linkage capability is essential for analyzing how differences between current and sought position requirements relate to 
-selection outcomes.
+The structure of our HRIS data appears in Table \ref{tab:hris_structure}, which illustrates the comprehensive information available for each application. The system records application timing, position details, applicant information, and selection outcomes. Crucially, for internal applicants, employee identifiers enable linking to their current positions and corresponding job postings. This linkage capability is essential for analyzing how differences between current and sought position requirements relate to selection outcomes.
 
 \clearpage
 \begin{tcolorbox}[colback=boxbackground,colframe=boxframe,sharp corners,
 title=Sample Job Description,
 label=box:vacancy_posting]
-\noindent \textbf{Overview}\
+\noindent \textbf{Overview}\\
 We are one of the world's leading financial institutions ... and risk management products and services.
-\noindent \textbf{Process Overview}\
-Build and evolve a consistent Authorized Data Source within Consumer & Small Business Bank (CSBB) ... both the strategic and tactical analytics needs of the Consumer Bank.
-\noindent \textbf{Job Description}\
+
+\noindent \textbf{Process Overview}\\
+Build and evolve a consistent Authorized Data Source within Consumer \& Small Business Bank (CSBB) ... both the strategic and tactical analytics needs of the Consumer Bank.
+
+\noindent \textbf{Job Description}\\
 Hadoop developer for multiple initiatives. Develop Big Data Strategy and Roadmap for the Enterprise. Experience in Capacity Planning, Cluster Designing and Deployment. Benchmark systems, analyze system bottlenecks, and propose solutions to eliminate them. Develop highly scalable and extensible Big Data platform, which enables collection, storage, modeling, and analysis of massive data sets from numerous channels. Continuously evaluate new technologies, innovate and deliver solution for business-critical applications.
-\noindent \textbf{Responsibilities}\
+
+\noindent \textbf{Responsibilities}\\
 Assists the team with the design of the architect layer to ensure re-usable metrics and attributes within the reporting layer. Responsible for creating and maintaining necessary documentation (MDR) to ensure audit readiness where necessary. Prototype improvement ideas. Work effectively with the global team. Expected to play technical leadership as an individual contributor. Articulate challenges, propose and drive solutions ...
-\noindent \textbf{Mandatory Skills}\
+
+\noindent \textbf{Mandatory Skills}\\
 Extensive knowledge of Hadoop stack and storage technologies HDFS, MapReduce, Yarn, HIVE, sqoop, Impala, spark, flume, kafka and oozie. Extensive Knowledge on Bigdata Enterprise architecture (Cloudera preferred). Experience in No SQL Technologies (Cassandra, Hbase).
-\noindent \textbf{Desired Skills}\
-Experience in Real time streaming (Kafka). Experience with Big Data Analytics & Business Intelligence and Industry standard tools integrated with Hadoop ecosystem. (R, Python). Visual Analytics Tools knowledge (Tableau). Data Integration, Data Security on Hadoop ecosystem. (Kerberos). Awareness or experience with Data Lake with Cloudera ecosystem.
-\noindent \textbf{Location:} ...\
-\textbf{Position Type:} Full-time\
-\textbf{Level:} III\
+
+\noindent \textbf{Desired Skills}\\
+Experience in Real time streaming (Kafka). Experience with Big Data Analytics \& Business Intelligence and Industry standard tools integrated with Hadoop ecosystem. (R, Python). Visual Analytics Tools knowledge (Tableau). Data Integration, Data Security on Hadoop ecosystem. (Kerberos). Awareness or experience with Data Lake with Cloudera ecosystem.
+
+\noindent \textbf{Location:} ...\\
+\textbf{Position Type:} Full-time\\
+\textbf{Level:} III\\
 \textbf{Department:} ...
 \end{tcolorbox}
+
 \noindent \textit{Notes:} This is a more detailed version of a sample vacancy posting with only information about the firm and the relevant sub-division redacted. The posting demonstrates the rich content available for analyzing skill requirements and job responsibilities. Such detailed specifications are typical across technical roles in our dataset, providing comprehensive information for measuring posting informativeness.
-Box \ref{box:vacancy_posting} demonstrates the typical depth of position postings in our dataset. As shown, each posting contains detailed specifications spanning multiple 
-dimensions: role overview, process context, specific responsibilities, and both mandatory and desired skills. This rich content enables precise measurement of skill 
-requirements and job characteristics, providing the foundation for validating posting informativeness.
+
+Box \ref{box:vacancy_posting} demonstrates the typical depth of position postings in our dataset. As shown, each posting contains detailed specifications spanning multiple dimensions: role overview, process context, specific responsibilities, and both mandatory and desired skills. This rich content enables precise measurement of skill requirements and job characteristics, providing the foundation for validating posting informativeness.
 
 \begin{table}[t]
     \caption{Sample Job Requisitions and Internal Applications}
     \begin{tabular*}{\textwidth}{@{\extracolsep\fill}llllc}
     \toprule
-    Job Requisition No. & Current Position & Position Applied To & Date & Selected \
+    Job Requisition No. & Current Position & Position Applied To & Date & Selected \\
     \midrule
-    REQ2021-456 & Data Engineer & Hadoop Developer & 2021-03 & Yes \
-    REQ2021-456 & ML Engineer & Hadoop Developer & 2021-03 & No \
-    \vdots & \vdots & \vdots & \vdots & \vdots \
-    REQ2021-458 & Data Analyst & ML Engineer & 2021-04 & Yes \
-    REQ2021-459 & Software Engineer & Sr. Developer & 2021-05 & Yes \
-    \vdots & \vdots & \vdots & \vdots & \vdots \
+    REQ2021-456 & Data Engineer & Hadoop Developer & 2021-03 & Yes \\
+    REQ2021-456 & ML Engineer & Hadoop Developer & 2021-03 & No \\
+    \vdots & \vdots & \vdots & \vdots & \vdots \\
+    REQ2021-458 & Data Analyst & ML Engineer & 2021-04 & Yes \\
+    REQ2021-459 & Software Engineer & Sr. Developer & 2021-05 & Yes \\
+    \vdots & \vdots & \vdots & \vdots & \vdots \\
     \bottomrule
-    \multicolumn{5}{l}{\footnotesize \textit{Notes:} Derived from HRIS data by linking internal applicants' Employee IDs to their current} \
-    \multicolumn{5}{l}{\footnotesize positions. Both current and applied-to positions contain detailed requirements as shown in Box \ref{box:vacancy_posting}.} \
-    \label{tab:requisitions}
+    \multicolumn{5}{p{\textwidth}}{\footnotesize \textit{Notes:} Derived from HRIS data by linking internal applicants' Employee IDs to their current positions. Both current and applied-to positions contain detailed requirements as shown in Box \ref{box:vacancy_posting}.} \\
     \end{tabular*}
-    \end{table}
+    \label{tab:requisitions}
+\end{table}
 
-    
-Table \ref{tab:requisitions} illustrates how we leverage the HRIS data structure to track internal mobility patterns. By linking internal applicants to their current 
-positions through employee identifiers, we can observe both the positions they apply to and detailed requirements of their current roles. Among positions receiving 
-internal applications, we identified 1,370 cases where we could observe the detailed posting of the applicant's current position at application time, forming the 
-core sample for our analysis of posting informativeness.
+Table \ref{tab:requisitions} illustrates how we leverage the HRIS data structure to track internal mobility patterns. By linking internal applicants to their current positions through employee identifiers, we can observe both the positions they apply to and detailed requirements of their current roles. Among positions receiving internal applications, we identified 1,370 cases where we could observe the detailed posting of the applicant's current position at application time, forming the core sample for our analysis of posting informativeness.
 
-The combination of detailed technical postings, comprehensive observation of application outcomes, and our ability to link current and sought positions makes this 
-setting particularly valuable for validating posting informativeness. The rich content in job postings reflects precise skill requirements for technical positions. 
-Moreover, access to both successful and unsuccessful applications enables robust testing of posting content's predictive power. Our unique ability to observe detailed 
-postings for applicants' current positions at the time of application allows direct measurement of skill distances, providing compelling evidence of whether these 
-measures meaningfully predict selection outcomes.
+The combination of detailed technical postings, comprehensive observation of application outcomes, and our ability to link current and sought positions makes this setting particularly valuable for validating posting informativeness. The rich content in job postings reflects precise skill requirements for technical positions. Moreover, access to both successful and unsuccessful applications enables robust testing of posting content's predictive power. Our unique ability to observe detailed postings for applicants' current positions at the time of application allows direct measurement of skill distances, providing compelling evidence of whether these measures meaningfully predict selection outcomes.
