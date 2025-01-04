@@ -21,40 +21,32 @@ We will now briefly discuss how we approach testing posting informativeness thro
 \begin{figure}
     \centering
     \begin{tikzpicture}[node distance=1.2cm]
-        % Define styles
-        \tikzstyle{process} = [rectangle, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered, draw=black, fill=blue!10]
-        \tikzstyle{data} = [rectangle, minimum width=2.5cm, minimum height=1cm, text centered, draw=black, fill=green!10]
+        % Simplified styles
+        \tikzstyle{process} = [rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered]
         \tikzstyle{arrow} = [thick,->,>=stealth]
         \tikzstyle{dotted} = [thick,->,>=stealth,dotted]
     
-        % Main pipeline nodes
+        % Main conceptual nodes - simplified positioning
         \node (embeddings) [process] {Pre-trained Embeddings};
-        \node (reduction) [process, right=2cm of embeddings] {Dimension Reduction};
-        \node (metric) [process, right=2cm of reduction] {Distance Metric Learning};
-        \node (tuning) [process, right=2cm of metric] {Parameter Tuning};
+        \node (reduction) [process] at (4,0) {Dimension Reduction};
+        \node (metric) [process] at (8,0) {Distance Metric Learning};
+        \node (tuning) [process] at (12,0) {Parameter Tuning};
         
-        % Validation node
-        \node (validation) [data, below=0.8cm of tuning] {Validation};
-        
-        % Selection data node
-        \node (selection) [data, below=0.8cm of metric] {Selection Data};
+        % Additional nodes with absolute positioning
+        \node (validation) [process] at (12,-1.5) {Validation};
+        \node (selection) [process] at (8,-1.5) {Selection Data};
     
-        % Connect everything
+        % Connect nodes with simplified paths
         \draw [arrow] (embeddings) -- (reduction);
         \draw [arrow] (reduction) -- (metric);
         \draw [arrow] (metric) -- (tuning);
         \draw [arrow] (tuning) -- (validation);
-        \draw [dotted] (tuning) to[bend right] node[midway, below] {Adjust} (reduction);
-        \draw [dotted] (selection) -- (metric) node[midway, right] {Guide};
-    
-        % Add annotations
-        \node [text width=2cm, align=center, font=\small] at (embeddings.north) [above=0.2cm] {Text to Vectors};
-        \node [text width=2cm, align=center, font=\small] at (reduction.north) [above=0.2cm] {Focus Signal};
-        \node [text width=2cm, align=center, font=\small] at (metric.north) [above=0.2cm] {Learn Patterns};
+        \draw [dotted] (tuning) to[bend right] node[below] {Adjust} (reduction);
+        \draw [dotted] (selection) -- (metric) node[right] {Guide};
     
     \end{tikzpicture}
-    \caption{Machine Learning Pipeline. Job posting text is transformed into vectors, reduced to relevant dimensions, and used to learn a distance metric guided by selection patterns. Parameter tuning ensures optimal performance through iterative adjustment.}
-    \label{fig:ml_pipeline}
+    \caption{Conceptual overview of our approach to measuring posting informativeness. The diagram shows how pre-trained embeddings are processed and refined through dimension reduction, with metric learning guided by selection data to reveal information content in postings.}
+    \label{fig:conceptual_overview}
 \end{figure}
 
 
