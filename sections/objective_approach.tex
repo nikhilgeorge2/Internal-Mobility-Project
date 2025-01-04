@@ -18,49 +18,45 @@ Success in predicting selection through the skill distance measure would validat
 We will now briefly discuss how we approach testing posting informativeness through this prediction task, before presenting a more detailed version in the following section. Our approach involves mapping job descriptions \(\{j_i\}\) to vectors \(\{x_i\}\) so that the distance \(d(x_v, x_c)\) inversely correlates with the probability of selection when a worker in current job \(c\) applies to vacancy \(v\). Two key ideas guide our approach to choosing the representation and distance metric. First, we leverage the language capabilities of a pre-trained transformer-based language model. While the specialized vocabulary used in IT job descriptions could be represented using more classical NLP approaches, the advanced language capabilities of a transformer model offer significant advantages in capturing subtle differences in skill requirements. Second, we utilize our selection and rejection data in a supervised capacity during the selection process for the representation and distance metric. This means we don't merely use the set of internal applications whose outcomes we observe for validation; we also incorporate this data to learn which aspects of posting content are most informative for predicting selection.
 
 
-
 \begin{figure}
     \centering
-    \begin{tikzpicture}[node distance=1.2cm, auto, thick, scale=1, every node/.style={scale=1}]
-    % Enhanced styles for boxes and arrows
-    \tikzstyle{box} = [rectangle, draw, text width=2.5cm, text centered, minimum height=1.5cm, rounded corners=3pt, fill=gray!5]
-    \tikzstyle{arrow} = [thick,->,>=stealth]
-    \tikzstyle{dotted arrow} = [thick,->,>=stealth,dotted]
-    \tikzstyle{note} = [text width=2.5cm, font=\small, align=center]
+    \begin{tikzpicture}[node distance=1.2cm]
+        % Define styles
+        \tikzstyle{process} = [rectangle, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered, draw=black, fill=blue!10]
+        \tikzstyle{data} = [rectangle, minimum width=2.5cm, minimum height=1cm, text centered, draw=black, fill=green!10]
+        \tikzstyle{arrow} = [thick,->,>=stealth]
+        \tikzstyle{dotted} = [thick,->,>=stealth,dotted]
     
-    % Job postings box (new)
-    \node[box] (postings) {Job Postings};
+        % Main pipeline nodes
+        \node (embeddings) [process] {Pre-trained Embeddings};
+        \node (reduction) [process, right=2cm of embeddings] {Dimension Reduction};
+        \node (metric) [process, right=2cm of reduction] {Distance Metric Learning};
+        \node (tuning) [process, right=2cm of metric] {Parameter Tuning};
+        
+        % Validation node
+        \node (validation) [data, below=0.8cm of tuning] {Validation};
+        
+        % Selection data node
+        \node (selection) [data, below=0.8cm of metric] {Selection Data};
     
-    % Main pipeline nodes
-    \node[box, right=of postings] (embeddings) {Pre-trained Embeddings};
-    \node[box, right=of embeddings] (reduction) {Dimension Reduction};
-    \node[box, right=of reduction] (metric) {Distance Metric Learning};
-    \node[box, right=of metric] (selection) {Parameter Tuning};
-    \node[box, below=0.8cm of selection] (validation) {Validation};
+        % Connect everything
+        \draw [arrow] (embeddings) -- (reduction);
+        \draw [arrow] (reduction) -- (metric);
+        \draw [arrow] (metric) -- (tuning);
+        \draw [arrow] (tuning) -- (validation);
+        \draw [dotted] (tuning) to[bend right] node[midway, below] {Adjust} (reduction);
+        \draw [dotted] (selection) -- (metric) node[midway, right] {Guide};
     
-    % Selection data box (new)
-    \node[box, dashed, below=0.8cm of metric] (seldata) {Selection Data};
-    
-    % Annotations (new)
-    \node[note, above=0.3cm of embeddings] {Transform text to vectors};
-    \node[note, above=0.3cm of reduction] {Focus on relevant dimensions};
-    \node[note, above=0.3cm of metric] {Learn from patterns};
-    
-    % Main flow arrows
-    \draw[arrow] (postings) -- (embeddings);
-    \draw[arrow] (embeddings) -- (reduction);
-    \draw[arrow] (reduction) -- (metric);
-    \draw[arrow] (metric) -- (selection);
-    \draw[arrow] (selection) -- (validation);
-    
-    % Guidance arrows
-    \draw[dotted arrow] (selection) to[bend right] node[midway, below] {Adjust based on AUC} (reduction);
-    \draw[dotted arrow] (seldata) -- (metric) node[midway, right] {Guide learning};
+        % Add annotations
+        \node [text width=2cm, align=center, font=\small] at (embeddings.north) [above=0.2cm] {Text to Vectors};
+        \node [text width=2cm, align=center, font=\small] at (reduction.north) [above=0.2cm] {Focus Signal};
+        \node [text width=2cm, align=center, font=\small] at (metric.north) [above=0.2cm] {Learn Patterns};
     
     \end{tikzpicture}
-    \caption{Machine Learning Pipeline Overview. Job posting text is transformed into vector representations, reduced to relevant dimensions, and used to learn a distance metric guided by selection patterns. Parameter tuning ensures optimal performance, with validation confirming the informativeness of the learned distances.}
+    \caption{Machine Learning Pipeline. Job posting text is transformed into vectors, reduced to relevant dimensions, and used to learn a distance metric guided by selection patterns. Parameter tuning ensures optimal performance through iterative adjustment.}
     \label{fig:ml_pipeline}
 \end{figure}
+
 
 \autoref{fig:ml_pipeline} pictorially outlines our broad approach. The first major idea is to leverage the capabilities of a pre-trained language model. We begin with standard pre-processing of job posting texts, then utilize pre-trained embeddings. In our context, embeddings are numerical representations of entire sentences or paragraphs from job descriptions. These embeddings capture the complex language patterns and specialized vocabulary often found in IT job descriptions. This aligns with our use of a pre-trained transformer-based language model, which excels at generating such representations. This approach provides a rich initial representation of the required skills and responsibilities, setting the foundation for our distance metric learning process. Using embeddings allows us to quantify and compare job descriptions more effectively than traditional text-based methods.
 
