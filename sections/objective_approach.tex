@@ -1,63 +1,67 @@
-
 \section{Objective and Approach}\label{sec:objective_approach}
 
-To test whether job postings contain meaningful information about skill requirements, we develop a distance measure between positions based on their posting content. If postings are informative about skills and requirements, this distance should be inversely related to the probability of selection when a person working in one position applies to fill another. In this section, we outline our goal and approach to learning the distance metric and introduce notation before discussing the details in the following section. To build intuition, let us consider the evaluation of a single internal applicant for a position. Let \(j_c\) denote the job description of the internal applicant and \(j_v\) the job description of the vacancy. There is some \(z_i\), a feature vector of the applicant observed in the selection process, which we do not observe. The decision maker assesses a distance \(\delta(j_v, (j_c, z_i))\) and selects the applicant if:
-\[
-S(j_v, (j_c, z_i)) = 
-\begin{cases} 
-1, & \text{if } \delta(j_v, (j_c, z_i)) < \tau \\
+Our central objective is to measure how informative job postings are about position requirements. This presents a 
+fundamental measurement challenge: how can we quantify the information content in posting text about actual 
+position requirements? We approach this challenge by examining selection patterns in internal labor markets, 
+which can reveal the information about position requirements and skill demands inherent within job posting text.
+
+Job postings attempt to communicate complex technical requirements through structured but varied language. 
+Similar skills might be described differently across postings, while seemingly different descriptions could 
+indicate similar requirements. Internal labor markets provide an ideal setting for measuring posting 
+informativeness, as we observe both detailed position descriptions and the outcomes of workers moving between 
+positions. If postings contain meaningful information about requirements, then differences in posting content 
+should help predict these movement patterns.
+
+To precisely define our measurement approach, let us consider the evaluation of a single internal applicant 
+for a position. Let $j_c$ denote the job description of the internal applicant's current position and $j_v$ 
+the job description of the vacancy. During selection, the decision maker observes features $z_i$ of the 
+applicant that we cannot observe (such as interview performance, specific project experience, or demonstrated 
+soft skills), assesses a distance $\delta(j_v, (j_c, z_i))$, and selects the applicant if:
+
+[
+S(j_v, (j_c, z_i)) =
+\begin{cases}
+1, & \text{if } \delta(j_v, (j_c, z_i)) < \tau \
 0, & \text{if } \delta(j_v, (j_c, z_i)) \geq \tau
 \end{cases}
-\]
-Here, \(S\) is a binary selection indicator. We observe the set \(A = \{(j_v, j_c, S)\}\) of past decisions, where \(S\) is the observed selection decision. Although we do not observe the feature vector \(z_i\) available to the decision maker, we use the set \(A\) to verify that the probability of selection \(\text{Pr}(S = 1 \mid x_v, x_c)\) is decreasing in \(d(x_v, x_c)\). Our goal is to find a representation function \(f\) that maps job descriptions \(\{j_i\}\) to a set of vectors \(\{x_i\}\), where \(x_i = f(j_i)\). Each vector \(x_i\) encodes information about the skills and responsibilities described in \(j_i\). We then want to choose an appropriate distance metric \(d(x_v, x_c)\) defined on the set \(\{x_i\}\) such that \(d(x_v, x_c)\) serves as a stand-in for \(\delta(j_v, (j_c, z_i))\). We aim to choose \(f\) and \(d\) so that a classifier predicting whether an applicant is selected for the position they applied for, based on \(d(x_v, x_c)\), has a high Area Under the Receiver Operating Characteristic Curve (AUC).
+]
+
+This selection rule indicates that if the distance between the vacancy and the applicant's profile 
+(based on their current role and unobserved features) is below a threshold, they are selected. Informative 
+job postings would lead to a distance metric where this threshold effectively separates qualified and 
+unqualified candidates based on the information contained in posting text alone. We can quantify this 
+informativeness using the Area Under the Receiver Operating Characteristic Curve (AUC), which measures 
+how well our learned distances distinguish between successful and unsuccessful transitions.
+
+We observe a set $A = {(j_v, j_c, S_{v,c})}$ of past decisions, where each observation contains the vacancy 
+posting, the applicant's current position posting, and the selection outcome. Our measurement approach 
+focuses on finding a representation function $f$ that maps job descriptions ${j_i}$ to a set of 
+vectors ${x_i}$, where $x_i = f(j_i)$. Each vector $x_i$ encodes information about the skills and 
+responsibilities described in $j_i$. Our goal is then to learn an appropriate distance metric $d(x_v, x_c)$ 
+defined on the set ${x_i}$ such that $d(x_v, x_c)$ serves as a stand-in for $\delta(j_v, (j_c, z_i))$.
 
 
-Success in predicting selection through the skill distance measure would validate that job postings capture meaningful differences in position requirements. Rather than relying on a uniform probability estimate of selection, the ability to generate varying probabilities based on posting content would demonstrate that these descriptions contain valuable and discriminative information about skill fit. If posting content is informative, the distance between job profile vectors should enable us to distinguish between more and less likely selections based purely on the documented position requirements. This would confirm that the detailed skill descriptions in postings meaningfully capture actual job requirements rather than serving as generic templates.
+We employ two key tools to measure posting informativeness: pre-trained language models that provide 
+systematic representations of posting content, and metric learning that reveals which differences in 
+these representations matter for position transitions. These tools serve to measure, not create, 
+information - like calibrating an instrument to detect existing signals. While we leverage selection 
+patterns to guide the metric learning process, this does not inject new information into the job postings. 
+Instead, it allows us to discover and quantify the information already present in the posting content that 
+aligns with actual hiring outcomes.
 
+[DIAGRAM PLACEHOLDER: Conceptual overview showing flow from job postings through representation and metric learning to measurement of informativeness]
 
-We will now briefly discuss how we approach testing posting informativeness through this prediction task, before presenting a more detailed version in the following section. Our approach involves mapping job descriptions \(\{j_i\}\) to vectors \(\{x_i\}\) so that the distance \(d(x_v, x_c)\) inversely correlates with the probability of selection when a worker in current job \(c\) applies to vacancy \(v\). Two key ideas guide our approach to choosing the representation and distance metric. First, we leverage the language capabilities of a pre-trained transformer-based language model. While the specialized vocabulary used in IT job descriptions could be represented using more classical NLP approaches, the advanced language capabilities of a transformer model offer significant advantages in capturing subtle differences in skill requirements. Second, we utilize our selection and rejection data in a supervised capacity during the selection process for the representation and distance metric. This means we don't merely use the set of internal applications whose outcomes we observe for validation; we also incorporate this data to learn which aspects of posting content are most informative for predicting selection.
+A key implementation challenge arises from the high dimensionality of language model representations. 
+In high dimensions, most points tend to be roughly the same distance apart; as distance measure is 
+important to us, we want to bring down the dimensionality of our representations. Moreover, while 
+these representations are rich, our selection data for supervised metric learning is limited. The 
+skills and requirements relevant to IT positions likely occupy a lower-dimensional manifold within 
+the embedding space, suggesting that dimension reduction can preserve the relevant information while 
+enabling effective measurement through metric learning.
 
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}[node distance=1.2cm]
-        % Simplified styles
-        \tikzstyle{process} = [rectangle, draw, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered]
-        \tikzstyle{arrow} = [thick,->,>=stealth]
-        \tikzstyle{dotted} = [thick,->,>=stealth,dotted]
-    
-        % Main conceptual nodes - simplified positioning
-        \node (embeddings) [process] {Pre-trained Embeddings};
-        \node (reduction) [process] at (4,0) {Dimension Reduction};
-        \node (metric) [process] at (8,0) {Distance Metric Learning};
-        \node (tuning) [process] at (12,0) {Parameter Tuning};
-        
-        % Additional nodes with absolute positioning
-        \node (validation) [process] at (12,-1.5) {Validation};
-        \node (selection) [process] at (8,-1.5) {Selection Data};
-    
-        % Connect nodes with simplified paths
-        \draw [arrow] (embeddings) -- (reduction);
-        \draw [arrow] (reduction) -- (metric);
-        \draw [arrow] (metric) -- (tuning);
-        \draw [arrow] (tuning) -- (validation);
-        \draw [dotted] (tuning) to[bend right] node[below] {Adjust} (reduction);
-        \draw [dotted] (selection) -- (metric) node[right] {Guide};
-    
-    \end{tikzpicture}
-    \caption{Conceptual overview of our approach to measuring posting informativeness. The diagram shows how pre-trained embeddings are processed and refined through dimension reduction, with metric learning guided by selection data to reveal information content in postings.}
-    \label{fig:conceptual_overview}
-\end{figure}
-
-
-\autoref{fig:ml_pipeline} pictorially outlines our broad approach. The first major idea is to leverage the capabilities of a pre-trained language model. We begin with standard pre-processing of job posting texts, then utilize pre-trained embeddings. In our context, embeddings are numerical representations of entire sentences or paragraphs from job descriptions. These embeddings capture the complex language patterns and specialized vocabulary often found in IT job descriptions. This aligns with our use of a pre-trained transformer-based language model, which excels at generating such representations. This approach provides a rich initial representation of the required skills and responsibilities, setting the foundation for our distance metric learning process. Using embeddings allows us to quantify and compare job descriptions more effectively than traditional text-based methods.
-
-The rich and dense embeddings from general-purpose language models are representations in a much larger space. Our goal is to measure distances between these objects, which lie in a smaller subspace. In high dimensions, most points tend to be roughly the same distance apart; as distance measure is important to us, we want to bring down the dimensionality of our representations. A second motivation is our interest in using the selection/rejection data in a supervising framework to learn a distance metric. The core idea is to learn from data a matrix $M$ to re-weight the distance between the respective representations of two job descriptions. As the observations of internal applications are limited, our ability to reweigh the distance measure is affected with high dimensions, in addition to the aforementioned curse of dimensionality problem of distances becoming less meaningful at higher dimensions. We apply dimension reduction techniques to transition the high-dimensional embeddings to more manageable vectors, facilitating more effective distance metric learning while retaining the most relevant information.
-
-
-The third aspect of our data analytic framework involves using a distance metric that is fine-tuned to our historical selection and rejection data in a supervised capacity. This ensures that the learned metric is tailored to our specific context. The key idea is that differences along features that matter less for selection should weigh less than differences along features that matter more. Metric learning is a well-established idea in machine learning, which we can apply to learn a custom distance between any pair of job representations. This approach allows us to incorporate the valuable information contained in our past hiring decisions directly into our distance measure.
-
-In practice, we must choose the dimensions of our representations carefully. Too few dimensions would not capture the differences between job profiles adequately, while too many would dampen our ability to take advantage of the supervised framework. We can select the optimal dimensionality of the representation via cross-validation. To measure effectiveness, we will utilize the Area Under the Curve (AUC), allowing us to iteratively adjust our approach. This process of validation and adjustment ensures that our distance metric continually improves in its ability to capture the selection patterns within the firm.
-
-
-This pipeline integrates pre-trained language models, dimensionality reduction, and supervised distance metric learning, making use of historical application and selection data. By actively crafting our representation and distance metric using real selection data, we can test whether job posting content meaningfully captures differences in skill requirements beyond simple text similarity. With this approach, we aim to validate whether postings contain sufficient information to predict selection outcomes, setting the foundation for examining how informative these descriptions are about actual position requirements and worker-job fit.
+The following section details our complete implementation pipeline. First, we leverage the language capabilities 
+of pre-trained transformer models, which excel at capturing subtle differences in technical skill requirements. 
+Second, we utilize selection patterns in a supervised capacity to learn which aspects of posting content are most 
+informative. By learning a distance metric where differences in posting content predict selection patterns, we 
+can measure how informative these postings are about actual position requirements. This measurement reveals 
+whether postings contain meaningful information about requirements or merely serve as generic templates.
