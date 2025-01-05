@@ -75,10 +75,11 @@ features relevant to distinguishing between job requirements and facilitating ef
         \node (red_vec) [vector] at (12,0) {Reduced\\Vectors};
         
         % Connections
-        \draw[arrow] (jobs) -- (llm);
-        \draw[arrow] (llm) -- (vec_rep);
-        \draw[arrow] (vec_rep) -- (reduce);
-        \draw[arrow] (reduce) -- (red_vec);
+
+        \draw[->] (jobs) -- (llm);
+        \draw[->] (llm) -- (vec_rep);
+        \draw[->] (vec_rep) -- (reduce);
+        \draw[->] (reduce) -- (red_vec);
     
         % Part II
         \node at (-2,-4) {\Large Part II:};
@@ -114,8 +115,8 @@ features relevant to distinguishing between job requirements and facilitating ef
         \node at (4.5,-5.2) {$\vdots$};
         
         % Connections
-        \draw[arrow] (data) -- (metric);
-        \draw[arrow] (metric) -- (dist);
+        \draw[->] (data) -- (metric);
+        \draw[->] (metric) -- (dist);
     
     \end{tikzpicture}
     \caption{Overview of our measurement approach. Part I illustrates the transformation of job posting text into vector representations: job postings are processed through a language model to create embeddings, which are then reduced to a lower-dimensional space. Part II shows how we learn a distance metric from the data: pairs of position vectors (current and sought positions) together with their selection outcomes are used to learn a distance measure that captures meaningful differences between positions.}
