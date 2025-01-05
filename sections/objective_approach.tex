@@ -56,73 +56,71 @@ features relevant to distinguishing between job requirements and facilitating ef
 
 \begin{figure}[t]
     \centering
-    \begin{tikzpicture}[scale=0.7, transform shape,
+    \begin{tikzpicture}[scale=0.85, transform shape,
         >=stealth,
-        box/.style={rectangle, draw, thick, minimum width=2cm, minimum height=1cm, align=center},
-        lmodel/.style={rectangle, draw, thick, rounded corners, fill=blue!20, minimum width=3cm, minimum height=1.5cm, align=center},
-        vector/.style={rectangle, draw, thick, minimum width=2cm, minimum height=1cm, fill=green!20, align=center},
-        reduction/.style={trapezium, trapezium angle=70, draw, thick, minimum width=2cm, minimum height=1cm, fill=orange!20, align=center},
-        learning/.style={regular polygon, regular polygon sides=8, draw, thick, minimum size=2.5cm, fill=red!30, align=center}
+        box/.style={rectangle, draw, thick, minimum width=2.2cm, minimum height=1cm, align=center},
+        lmodel/.style={rectangle, draw, thick, rounded corners, fill=blue!20, minimum width=3.2cm, minimum height=1.2cm, align=center},
+        vector/.style={rectangle, draw, thick, minimum width=2.2cm, minimum height=1cm, fill=green!20, align=center},
+        reduction/.style={trapezium, trapezium angle=70, draw, thick, minimum width=2.2cm, minimum height=1cm, fill=orange!20, align=center},
+        learning/.style={regular polygon, regular polygon sides=8, draw, thick, minimum size=2.2cm, fill=red!30, align=center}
     ]
         % Part I
-        \node at (-2,0) {\Large Part I:};
-        
+        \node (part1_label) at (-2,0) {\Large Part I:};
+
         % Part I Components
         \node (jobs) [box, fill=green!20] at (0,0) {Job\\Postings};
-        \node (llm) [lmodel] at (3,0) {Language\\Model};
-        \node (vec_rep) [vector] at (6,0) {Vector\\Representations};
-        \node (reduce) [reduction] at (9,0) {Dimension\\Reduction};
-        \node (red_vec) [vector] at (12,0) {Reduced\\Vectors};
-        
-        % Connections
+        \node (llm) [lmodel] at (3.5,0) {Language\\Model};
+        \node (vec_rep) [vector] at (7,0) {Vector\\Representations};
+        \node (reduce) [reduction] at (10.5,0) {Dimension\\Reduction};
+        \node (red_vec) [vector] at (14,0) {Reduced\\Vectors};
 
+        % Connections
         \draw[->] (jobs) -- (llm);
         \draw[->] (llm) -- (vec_rep);
         \draw[->] (vec_rep) -- (reduce);
         \draw[->] (reduce) -- (red_vec);
-    
+
         % Part II
         \node at (-2,-4) {\Large Part II:};
-        
+
         % Part II Components
-        \node (data) [box, minimum width=5cm, minimum height=3cm] at (3,-4) {};
-        \node (metric) [learning] at (8,-4) {Metric\\Learning};
-        \node (dist) [vector] at (12,-4) {Distance\\Measure\\$d(\cdot,\cdot)$};
-        
+        \node (data) [box, minimum width=5cm, minimum height=3cm] at (3.5,-4) {};
+        \node (metric) [learning] at (9,-4) {Metric\\Learning};
+        \node (dist) [vector] at (14,-4) {Distance\\Measure\\$d(\cdot,\cdot)$};
+
         % Data table headers
-        \node[text=blue] at (1.5,-3.2) {Current};
-        \node[text=blue] at (3,-3.2) {Sought};
-        \node[text=blue] at (4.5,-3.2) {Selection};
-        
+        \node[text=blue] at (2,-3.2) {Current};
+        \node[text=blue] at (3.5,-3.2) {Sought};
+        \node[text=blue] at (5,-3.2) {Selection};
+
         % Draw vertical lines
-        \draw (2.2,-3) -- (2.2,-5);
-        \draw (3.8,-3) -- (3.8,-5);
-        
+        \draw (2.7,-3) -- (2.7,-5);
+        \draw (4.3,-3) -- (4.3,-5);
+
         % Draw vector bars
         \foreach \y in {-3.6,-4.2,-4.8} {
-            \fill[green!40] (1.2,\y) rectangle +(1,0.2);
-            \fill[green!40] (2.7,\y) rectangle +(1,0.2);
+            \fill[green!40] (1.7,\y) rectangle +(1,0.2);
+            \fill[green!40] (3.2,\y) rectangle +(1,0.2);
         }
-        
+
         % Selection symbols
-        \node[text=green!50!black] at (4.5,-3.6) {$\checkmark$};
-        \node[text=red] at (4.5,-4.2) {$\times$};
-        \node[text=green!50!black] at (4.5,-4.8) {$\checkmark$};
-        
+        \node[text=green!50!black] at (5,-3.6) {$\checkmark$};
+        \node[text=red] at (5,-4.2) {$\times$};
+        \node[text=green!50!black] at (5,-4.8) {$\checkmark$};
+
         % Dots
-        \node at (1.7,-5.2) {$\vdots$};
-        \node at (3.2,-5.2) {$\vdots$};
-        \node at (4.5,-5.2) {$\vdots$};
-        
+        \node at (2.2,-5.2) {$\vdots$};
+        \node at (3.7,-5.2) {$\vdots$};
+        \node at (5,-5.2) {$\vdots$};
+
         % Connections
         \draw[->] (data) -- (metric);
         \draw[->] (metric) -- (dist);
-    
+
     \end{tikzpicture}
     \caption{Overview of our measurement approach. Part I illustrates the transformation of job posting text into vector representations: job postings are processed through a language model to create embeddings, which are then reduced to a lower-dimensional space. Part II shows how we learn a distance metric from the data: pairs of position vectors (current and sought positions) together with their selection outcomes are used to learn a distance measure that captures meaningful differences between positions.}
     \label{fig:approach_overview}
-    \end{figure}
-
+\end{figure}
 
 
 The following section details our implementation pipeline. We begin by generating high-dimensional embeddings of 
