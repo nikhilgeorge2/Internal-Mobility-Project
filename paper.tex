@@ -1,23 +1,28 @@
+\newif\ifanonymous
+\anonymousfalse  % Set to \anonymoustrue for anonymous version
 
 \documentclass[letterpaper,11pt,leqno]{article}
 \usepackage{paper}
 \bibliographystyle{bibliography}
-
-% PDF metadata and paths
 \hypersetup{pdftitle={How Informative are Job Posting Skill Measures? Evidence from Selection Decisions}}
 \newcommand{\bib}{references.bib}
 
 \begin{document}
-
-% Title and authors
 \title{How Informative are Job Posting Skill Measures? \\ Evidence from Selection Decisions}
-\author{%
- Nikhil George \and Ramayya Krishnan \and Rahul Telang%
- \thanks{The authors are at Carnegie Mellon University. We gratefully acknowledge support from the Block Center for Technology and Society at Carnegie Mellon University. We thank our partner firm for their collaboration and valuable data access. We also appreciate the helpful feedback received from conference and seminar participants. The analysis and conclusions presented in this paper are those of the authors.}%
-}
-\date{December 2024}
+
+\ifanonymous
+  \date{December 2024}
+\else
+  \author{%
+    Nikhil George \and Ramayya Krishnan \and Rahul Telang%
+    \thanks{The authors are at Carnegie Mellon University. We gratefully acknowledge support from the Block Center for Technology and Society at Carnegie Mellon University. We thank our partner firm for their collaboration and valuable data access. We also appreciate the helpful feedback received from conference and seminar participants. The analysis and conclusions presented in this paper are those of the authors.}%
+  }
+  \date{December 2024}
+\fi
 
 \begin{titlepage}
+\maketitle
+
 \maketitle
 
 Information embedded within job postings is increasingly central to modern labor markets, serving not only potential employees but also powering 
