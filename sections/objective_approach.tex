@@ -56,6 +56,9 @@ features relevant to distinguishing between job requirements and facilitating ef
 
 
 \begin{figure}[t]
+    % Add the necessary TikZ libraries if not already in preamble
+    \usetikzlibrary{shapes.geometric, shapes.symbols, arrows, positioning, calc, matrix}
+    
     \centering
     \begin{tikzpicture}[
         >=stealth,
@@ -70,6 +73,7 @@ features relevant to distinguishing between job requirements and facilitating ef
         vectorbar/.style={rectangle, draw=none, fill=green!40, minimum width=1.5cm, minimum height=0.3cm},
         arrow/.style={thick, ->}
     ]
+        % [Rest of the TikZ code exactly as in your working version]
         % Part I Label
         \node[align=left] at (-2.5,0) {\Large Part I:};
         
@@ -85,7 +89,6 @@ features relevant to distinguishing between job requirements and facilitating ef
         \draw[arrow] (llm) -- (vec_rep);
         \draw[arrow] (vec_rep) -- (reduce);
         \draw[arrow] (reduce) -- (red_vec);
-    
         % Part II Label
         \node[align=left] at (-2.5,-4.5) {\Large Part II:};
         
@@ -102,13 +105,13 @@ features relevant to distinguishing between job requirements and facilitating ef
         \draw[thick] ($(data.north west)+(2.2,0)$) -- ($(data.south west)+(2.2,0)$);
         \draw[thick] ($(data.north west)+(4.2,0)$) -- ($(data.south west)+(4.2,0)$);
         
-        % Sample data rows with vector bars
+        % Sample data rows with vector bars and check/cross
         \foreach \i [count=\yi] in {1,...,3}{
             \node[vectorbar] at ($(data.north west)+(1.2,-0.7-\yi*0.7)$) {};
             \node[vectorbar] at ($(data.north west)+(3.2,-0.7-\yi*0.7)$) {};
         }
         
-        % Selection symbols with proper LaTeX symbols
+        % Selection symbols
         \node[text=green!50!black] at ($(data.north west)+(5.2,-1.4)$) {\Large $\checkmark$};
         \node[text=red] at ($(data.north west)+(5.2,-2.1)$) {\Large $\times$};
         \node[text=green!50!black] at ($(data.north west)+(5.2,-2.8)$) {\Large $\checkmark$};
@@ -125,12 +128,10 @@ features relevant to distinguishing between job requirements and facilitating ef
         % Part II Connections
         \draw[arrow] (data) -- (metric);
         \draw[arrow] (metric) -- (dist);
-    
     \end{tikzpicture}
     \caption{Overview of our measurement approach. Part I illustrates the transformation of job posting text into vector representations: job postings are processed through a language model to create embeddings, which are then reduced to a lower-dimensional space. Part II shows how we learn a distance metric from the data: pairs of position vectors (current and sought positions) together with their selection outcomes are used to learn a distance measure that captures meaningful differences between positions.}
     \label{fig:approach_overview}
 \end{figure}
-
 
 The following section details our implementation pipeline. We begin by generating high-dimensional embeddings of 
 job postings using pre-trained transformer models. 
