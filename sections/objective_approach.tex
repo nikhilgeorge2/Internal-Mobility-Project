@@ -54,12 +54,9 @@ tendency to cluster within the broader embedding space. Therefore, we employ dim
 to map these high-dimensional representations to a lower-dimensional space, aiming to distill the most salient 
 features relevant to distinguishing between job requirements and facilitating effective metric learning.
 
-
 \begin{figure}[t]
-    % Add the necessary TikZ libraries if not already in preamble
-    \usetikzlibrary{shapes.geometric, shapes.symbols, arrows, positioning, calc, matrix}
-    
     \centering
+    \resizebox{0.7\textwidth}{!}{
     \begin{tikzpicture}[
         >=stealth,
         % Part I styles
@@ -128,10 +125,12 @@ features relevant to distinguishing between job requirements and facilitating ef
         % Part II Connections
         \draw[arrow] (data) -- (metric);
         \draw[arrow] (metric) -- (dist);
-    \end{tikzpicture}
+    \end{tikzpicture}}
     \caption{Overview of our measurement approach. Part I illustrates the transformation of job posting text into vector representations: job postings are processed through a language model to create embeddings, which are then reduced to a lower-dimensional space. Part II shows how we learn a distance metric from the data: pairs of position vectors (current and sought positions) together with their selection outcomes are used to learn a distance measure that captures meaningful differences between positions.}
     \label{fig:approach_overview}
 \end{figure}
+
+
 
 The following section details our implementation pipeline. We begin by generating high-dimensional embeddings of 
 job postings using pre-trained transformer models. 
