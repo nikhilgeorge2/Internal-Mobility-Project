@@ -58,20 +58,21 @@ process: Principal Component Analysis (PCA) followed by Fuzzy C-Means (FCM) clus
 combines PCA's strength in capturing linear relationships with FCM's ability to model complex, overlapping 
 characteristics of job postings.
 
-Our initial step employs Principal Component Analysis (PCA), a well-established technique for reducing the dimensionality 
-of high-dimensional data while preserving the most significant variance. The initial Sentence-BERT embeddings, 
-for both skills (\{e_i^s\}) and tasks (\{e_i^t\}), reside in a 384-dimensional space. Working directly with this 
-high dimensionality poses challenges for learning a robust and tailored distance metric. PCA addresses this by 
-identifying principal components—orthogonal linear combinations of the original features that capture maximum 
-variance in the data. By projecting the data onto these top principal components, we effectively reduce 
-dimensionality while retaining the most salient linear information and mitigating the impact of noise. We apply 
-PCA separately to the skill and task embeddings, recognizing that these represent distinct aspects of a job posting 
-with potentially different underlying structures. Retaining the components that explain 90\% of the variance 
-reduces the skill embeddings to 49 dimensions (\{p_i^s\}) and the task embeddings to 124 dimensions (\{p_i^t\}). 
-This difference in dimensionality suggests that skill descriptions exhibit more structured patterns, likely 
-due to the specific vocabulary used for technical skills compared to the broader language of job responsibilities. 
-While PCA effectively captures linear relationships, the potential presence of non-linear patterns motivates 
-our subsequent step using Fuzzy C-Means clustering.
+Our initial step employs Principal Component Analysis (PCA), a well-established technique for reducing the 
+dimensionality of high-dimensional data while preserving the most significant variance. The initial 
+Sentence-BERT embeddings, for both skills $(e_i^s)$ and tasks $(e_i^t)$, reside in a 384-dimensional space. 
+Working directly with this high dimensionality poses challenges for learning a robust and tailored distance metric. 
+PCA addresses this by identifying principal components---orthogonal linear combinations of the original features that 
+capture maximum variance in the data. By projecting the data onto these top principal components, we effectively 
+reduce dimensionality while retaining the most salient linear information and mitigating the impact of noise. 
+We apply PCA separately to the skill and task embeddings, recognizing that these represent distinct aspects of 
+a job posting with potentially different underlying structures. Retaining the components that explain 90\% of 
+the variance reduces the skill embeddings to 49 dimensions $(p_i^s)$ and the task embeddings to 124 dimensions 
+$(p_i^t)$. This difference in dimensionality suggests that skill descriptions exhibit more structured patterns, 
+likely due to the specific vocabulary used for technical skills compared to the broader language of job 
+responsibilities. While PCA effectively captures linear relationships, the potential presence of 
+non-linear patterns motivates our subsequent step using Fuzzy C-Means clustering.
+
 
 Building upon PCA's dimensionality reduction, we employ Fuzzy C-Means (FCM) clustering to create a representation 
 capturing non-linear relationships and allowing nuanced characterization of job postings. Unlike traditional 
@@ -87,15 +88,17 @@ skill and task composition. FCM identifies cluster centers in the PCA-reduced da
 prototypical skill and task profiles, then assigns membership probabilities based on proximity to these centers.
 
 In this dimension reduction step, FCM transforms the PCA-reduced embeddings into vectors of membership probabilities. 
-We apply FCM separately to the PCA-reduced skill embeddings (\{p_i^s\}) and task embeddings (\{p_i^t\}). 
-For skills, FCM identifies k_s clusters, representing each job posting with a membership 
-probability vector (\m_i^s\) of dimension k_s. Each element represents the posting's alignment with 
-a specific skill cluster—higher values indicating stronger alignment with that cluster's skill profile. 
-Similarly, for tasks, FCM identifies k_t clusters, producing a membership probability vector (\m_i^t\) of 
-dimension k_t. Concatenating these vectors creates our final reduced-dimensional representation (x_i) of 
-dimension (k_s + k_t). While the precise interpretation of individual clusters merits further investigation, 
-this representation effectively captures each posting's relationship to prevalent skill and 
-task combinations in our data. This provides a foundation for learning a distance metric tailored to our organizational context, enabling meaningful comparisons between positions based on their skill and task profiles.
+We apply FCM separately to the PCA-reduced skill embeddings $(p_i^s)$ and task embeddings $(p_i^t)$. For skills, 
+FCM identifies $k_s$ clusters, representing each job posting with a membership probability vector $(m_i^s)$ of 
+dimension $k_s$. Each element represents the posting's alignment with a specific skill cluster---higher values 
+indicating stronger alignment with that cluster's skill profile. Similarly, for tasks, FCM identifies $k_t$ 
+clusters, producing a membership probability vector $(m_i^t)$ of dimension $k_t$. Concatenating these vectors 
+creates our final reduced-dimensional representation $(x_i)$ of dimension $(k_s + k_t)$. While the precise 
+interpretation of individual clusters merits further investigation, this representation effectively captures 
+each posting's relationship to prevalent skill and task combinations in our data. This provides a foundation 
+for learning a distance metric tailored to our organizational context, enabling meaningful comparisons between 
+positions based on their skill and task profiles.
+
 
 \begin{figure}[htbp]
     \centering
@@ -162,19 +165,42 @@ task combinations in our data. This provides a foundation for learning a distanc
 
 \subsection{Distance Metric Learning}
 
-Having established a numerical representation of job descriptions through our two-stage dimension reduction, we now focus on calibrating a distance metric to effectively capture meaningful differences between positions. Our approach combines the rich representations derived from pre-trained language models with historical selection decisions as a supervisory signal. These past decisions serve as ground truth, helping us identify which aspects of job posting content are truly informative for predicting successful hires. Importantly, we do not inject selection outcome information into the job postings themselves; rather, historical data guides our metric to emphasize the inherently predictive differences in posting content.
+Having established a numerical representation of job descriptions through our two-stage dimension reduction, 
+we now focus on calibrating a distance metric to effectively capture meaningful differences between positions. 
+Our approach combines the rich representations derived from pre-trained language models with historical selection 
+decisions as a supervisory signal. These past decisions serve as ground truth, helping us identify which aspects 
+of job posting content are truly informative for predicting successful hires. Importantly, we do not inject 
+selection outcome information into the job postings themselves; rather, historical data guides our metric 
+to emphasize the inherently predictive differences in posting content.
 
-Learning a custom metric offers significant advantages over generic distance measures in assessing job posting informativeness. Traditional metrics like Euclidean distance treat all dimensions equally, failing to capture the varying importance of different skills and responsibilities in actual hiring decisions. Through metric learning, we calibrate the weights of our representation vector (x_i) based on how informatively different aspects of posting content differentiated between successful and unsuccessful applications. Consider a software development position requiring both core technical skills (e.g., expertise in Mainframe development) and general workplace skills (e.g., presentation software proficiency). Our metric learns to emphasize substantial differences in core technical requirements, which historically strongly predicted selection outcomes, while de-emphasizing variations in general skills that had minimal impact on hiring decisions.
+Learning a custom metric offers significant advantages over generic distance measures in assessing job posting 
+informativeness. Traditional metrics like Euclidean distance treat all dimensions equally, failing to capture 
+the varying importance of different skills and responsibilities in actual hiring decisions. Through metric 
+learning, we calibrate the weights of our representation vector $(x_i)$ based on how informatively different 
+aspects of posting content differentiated between successful and unsuccessful applications. Consider a 
+software development position requiring both core technical skills (e.g., expertise in Mainframe development) 
+and general workplace skills (e.g., presentation software proficiency). Our metric learns to emphasize 
+substantial differences in core technical requirements, which historically strongly predicted selection outcomes, 
+while de-emphasizing variations in general skills that had minimal impact on hiring decisions.
 
-We employ the family of Mahalanobis distances, parameterized by a positive semi-definite matrix (M), where dimensions are weighted according to their informativeness in distinguishing successful applications. In the diagonal case, where (M) contains only diagonal entries, the distance calculation represents an independent scaling of each dimension—stretching those that historically differentiated outcomes and compressing less informative ones. When (M) is non-diagonal, it can capture more complex relationships through both scaling and rotation of the feature space, revealing subtle but informative patterns in the posting content. Formally, we define our distance function as:
+We employ the family of Mahalanobis distances, parameterized by a positive semi-definite matrix $(M)$, where 
+dimensions are weighted according to their informativeness in distinguishing successful applications. In the 
+diagonal case, where $(M)$ contains only diagonal entries, the distance calculation represents an independent 
+scaling of each dimension---stretching those that historically differentiated outcomes and compressing less 
+informative ones. When $(M)$ is non-diagonal, it can capture more complex relationships through both scaling 
+and rotation of the feature space, revealing subtle but informative patterns in the posting content. Formally, 
+we define our distance function as:
 
 \begin{equation}
 d(x_v, x_c; M) = \sqrt{(x_v - x_c)^T M (x_v - x_c)}
 \end{equation}
 
-where (x_v) represents the vector of the sought vacancy, (x_c) represents the vector of the current job, and (M) is our calibrated Mahalanobis matrix.
+where $(x_v)$ represents the vector of the sought vacancy, $(x_c)$ represents the vector of the current job, 
+and $(M)$ is our calibrated Mahalanobis matrix.
 
-To calibrate M, we utilize a dataset (A) of tuples ((x_v, x_c, S_{v,c})), comprising vector representations of vacancy and current job descriptions with their corresponding selection outcomes. We employ the Mahalanobis Metric for Clustering (MMC) algorithm (Xing et al., 2002), which solves:
+To calibrate $M$, we utilize a dataset $(A)$ of tuples $((x_v, x_c, S_{v,c}))$, comprising vector representations 
+of vacancy and current job descriptions with their corresponding selection outcomes. We employ the Mahalanobis 
+Metric for Clustering (MMC) algorithm \citep{Xing2002}, which solves:
 
 \begin{align*}
 \text{Maximize:} \quad & \sum_{(v,c): S_{v,c} = 0} d(x_v, x_c; M) \\[1em]
@@ -182,59 +208,12 @@ To calibrate M, we utilize a dataset (A) of tuples ((x_v, x_c, S_{v,c})), compri
 & M \succeq 0
 \end{align*}
 
-This formulation calibrates the metric to distinguish between successful and unsuccessful applications by maximizing distances between rejected pairs while maintaining bounded distances for selected pairs. Implementation uses Python 3.5 and scikit-learn, leveraging 1,060 observations (75\% of our selection decisions) for training. The dimensionality of (M), determined by our FCM clustering parameters, influences the granularity of our representation of informative skill and task profiles, which we optimize through parameter tuning as discussed next.
-Having represented job descriptions as vectors through our two-stage dimension reduction process, we now focus 
-on learning a distance metric that effectively captures meaningful differences between positions. Our approach 
-combines two key strengths: the rich representations derived from pre-trained language models and the supervisory 
-signal from historical selection decisions, which helps identify which aspects of job posting content are most 
-predictive of successful hires.
+This formulation calibrates the metric to distinguish between successful and unsuccessful applications by 
+maximizing distances between rejected pairs while maintaining bounded distances for selected pairs. Implementation 
+uses Python 3.11 and scikit-learn, leveraging 1,060 observations (75\% of our selection decisions) for training. 
+The dimensionality of $(M)$, determined by our FCM clustering parameters, influences the granularity of our 
+representation of informative skill and task profiles, which we optimize through parameter tuning as discussed next.
 
-Learning a custom metric offers significant advantages over generic distance measures by allowing us to 
-capture the specific characteristics and selection patterns of our organization. Traditional metrics like 
-Euclidean distance treat all dimensions equally, failing to account for the varying importance of different 
-skills and responsibilities in actual hiring decisions. Through metric learning, we can weigh the components 
-of our representation vector (x_i) according to their demonstrated relevance in past selections. For example, 
-consider a software development position requiring both core technical skills (e.g., expertise in Mainframe 
-development) and general workplace skills (e.g., presentation software proficiency). While a candidate lacking 
-Mainframe expertise would likely be rejected, deficiencies in presentation skills might have minimal impact on 
-selection. Our learned metric aims to capture these nuanced hiring priorities, providing a distance measure 
-specifically adapted to assessing skill adequacy for given vacancies.
-
-We focus on the family of Mahalanobis distances, parameterized by a positive semi-definite matrix (M). 
-The key insight is that dimensions should be weighted according to their importance in distinguishing between 
-successful and unsuccessful applications. In the diagonal case, where (M) contains only diagonal entries, 
-the distance calculation represents an independent scaling of each dimension. This leads to highly 
-interpretable results: irrelevant dimensions are compressed (minimizing their impact), while crucial 
-dimensions are stretched (requiring close matches for similarity). When (M) is allowed to be non-diagonal, 
-it can capture more complex relationships through both scaling and rotation of the feature space, though at 
-the cost of reduced interpretability. Formally, we define our distance function as:
-
-\begin{equation}
-d(x_v, x_c; M) = \sqrt{(x_v - x_c)^T M (x_v - x_c)}
-\end{equation}
-
-where (x_v) represents the vector of the sought vacancy, (x_c) represents the vector of the current job, and (M) 
-is our learned Mahalanobis matrix.
-
-Our learning process utilizes a dataset (A) of tuples ((x_v, x_c, S_{v,c})), where (x_v) and (x_c) are the vector 
-representations of the vacancy and current job descriptions, respectively, and (S_{v,c}) is a binary selection 
-indicator. We aim to learn a matrix (M) that yields larger distances for rejected applications compared to 
-successful ones, focusing specifically on plausible applications as represented in our dataset. To achieve this, 
-we employ the Mahalanobis Metric for Clustering (MMC) algorithm (Xing et al., 2002), which solves the following 
-optimization problem:
-
-\begin{align*}
-    \text{Maximize:} \quad & \sum_{(v,c): S_{v,c} = 0} d(x_v, x_c; M) \\[1em]
-    \text{Subject to:} \quad & \sum_{(v,c): S_{v,c} = 1} d(x_v, x_c; M)^2 \leq 1 \\
-    & M \succeq 0
-\end{align*}
-
-This formulation maximizes distances between rejected pairs while maintaining bounded distances for selected pairs 
-and ensuring 
-(M) satisfies metric properties. We implement this approach using Python 3.5 and scikit-learn, 
-leveraging 1,060 observations (75\% of our selection decisions) for training. The dimensionality of 
-(M) depends on the number of clusters chosen in our FCM step, which we optimize through parameter 
-tuning as discussed in the following section.
 
 \subsection{Parameter Tuning}
 
