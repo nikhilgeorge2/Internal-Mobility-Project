@@ -217,36 +217,36 @@ representation of informative skill and task profiles, which we optimize through
 
 \subsection{Parameter Tuning}
 
-To implement the Mahalanobis Metric for Clustering (MMC) algorithm effectively, we need to determine the 
-optimal number of clusters for the Fuzzy C-Means (FCM) step: (k_t) for task embeddings and (k_s) for skill 
-embeddings. These parameters directly determine how finely our representation can distinguish between 
-different types of job postings. The choice of cluster numbers influences our ability to capture meaningful 
-distinctions between positions while avoiding overly granular distinctions that might not generalize well. 
-Selecting appropriate values is crucial for creating a representation that effectively captures the 
-underlying patterns in our hiring data and leads to the most accurate distance metric for predicting 
+To implement the Mahalanobis Metric for Clustering (MMC) algorithm effectively, we need to determine the
+optimal number of clusters for the Fuzzy C-Means (FCM) step: $(k_t)$ for task embeddings and $(k_s)$ for skill
+embeddings. These parameters directly determine how finely our representation can distinguish between
+different types of job postings. The choice of cluster numbers influences our ability to capture meaningful
+distinctions between positions while avoiding overly granular distinctions that might not generalize well.
+Selecting appropriate values is crucial for creating a representation that effectively captures the
+underlying patterns in our hiring data and leads to the most accurate distance metric for predicting
 selection probabilities.
 
-Utilizing our dataset of 1,370 internal applications and their outcomes (excluding cases where internal 
-candidates were rejected in favor of other internal applicants), we employ a rigorous 5-fold cross-validation 
-strategy on the application dataset (A). For each fold, we test combinations of (k_s) and (k_t), where 
-(k_s, k_t \in {2, 3, ..., 20}), subject to the constraint (k_s + k_t < 25). This constraint serves a 
-practical purpose: with limited training data, allowing the dimensionality of the Mahalanobis matrix (M) 
-to grow too large risks overfitting and poor generalization. For each combination, we train the MMC algorithm 
-on the reduced-dimensional representations derived from the SBERT embeddings and FCM, evaluating performance 
+Utilizing our dataset of 1,370 internal applications and their outcomes (excluding cases where internal
+candidates were rejected in favor of other internal applicants), we employ a rigorous 5-fold cross-validation
+strategy on the application dataset $(A)$. For each fold, we test combinations of $(k_s)$ and $(k_t)$, where
+$k_s, k_t \in \{2, 3, \ldots, 20\}$, subject to the constraint $k_s + k_t < 25$. This constraint serves a
+practical purpose: with limited training data, allowing the dimensionality of the Mahalanobis matrix $(M)$
+to grow too large risks overfitting and poor generalization. For each combination, we train the MMC algorithm
+on the reduced-dimensional representations derived from the SBERT embeddings and FCM, evaluating performance
 on the held-out fold using the Area Under the Receiver Operating Characteristic Curve (AUC).
 
-Our cross-validation analysis, visualized in Figure \ref{fig:AUC}, reveals that optimal performance 
-is achieved with (k_s = 17) skill clusters and (k_t = 3) task clusters, yielding an average AUC of 0.62. 
-This substantial imbalance between the number of skill and task clusters—17 versus 3—aligns with our intuition 
-about job postings: while technical skills tend to be numerous and specific (e.g., programming languages, 
-tools, frameworks), job tasks often fall into broader categories (e.g., development, maintenance, management). 
-The data-driven optimization of these parameters ensures our representation captures meaningful patterns while 
+Our cross-validation analysis, visualized in Figure \ref{fig:AUC}, reveals that optimal performance
+is achieved with $k_s = 17$ skill clusters and $k_t = 3$ task clusters, yielding an average AUC of 0.62.
+This substantial imbalance between the number of skill and task clusters---17 versus 3---aligns with our intuition
+about job postings: while technical skills tend to be numerous and specific (e.g., programming languages,
+tools, frameworks), job tasks often fall into broader categories (e.g., development, maintenance, management).
+The data-driven optimization of these parameters ensures our representation captures meaningful patterns while
 maintaining generalizability.
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=0.75\textwidth]{new_img/chart.png}
-\caption{Cross-validated AUC scores across different total dimensionalities (k), showing optimal performance at k = 20}
+\caption{Cross-validated AUC scores across different total dimensionalities ($k$), showing optimal performance at $k = 20$}
 \label{fig:AUC}
 \end{figure}
 
