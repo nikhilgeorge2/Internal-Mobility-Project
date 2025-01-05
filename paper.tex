@@ -12,7 +12,7 @@
 
 \ifanonymous
   \date{December 2024}
-\else
+\else 
   \author{%
     Nikhil George \and Ramayya Krishnan \and Rahul Telang%
     \thanks{The authors are at Carnegie Mellon University. We gratefully acknowledge support from the Block Center for Technology and Society at Carnegie Mellon University. We thank our partner firm for their collaboration and valuable data access. We also appreciate the helpful feedback received from conference and seminar participants. The analysis and conclusions presented in this paper are those of the authors.}%
@@ -21,22 +21,22 @@
 \fi
 
 \begin{titlepage}
-\maketitle
+\maketitle  % Call \maketitle only ONCE within the titlepage environment
 
-\maketitle
-
-Information embedded within job postings is increasingly central to modern labor markets, serving not only potential employees but also powering 
-matching algorithms, screening tools, and broader workforce analytics. This growing reliance necessitates a thorough validation of skill and job requirement 
-measures derived from job posting content. We provide the first empirical validation of this informativeness by predicting selection for internal jobs within 
-a major firm using a novel measure of skill distance constructed solely from job postings. Our analysis reveals that job posting-derived skill distances 
-strongly predict selection outcomes: the probability of selection is 84\% higher when the sought job is in the lowest quintile of skill distance 
-compared to a position in the highest quintile. Furthermore, in 70\% of cases where multiple candidates applied, the selected candidate 
-was the one with the shortest skill distance. Notably, these posting-derived skill measures consistently outperform traditional employee 
-characteristics in explaining selection decisions. Building on this validation, we demonstrate how internal application intensity is 
-significantly correlated with the average skill distance to emerging opportunities, yielding novel insights directly relevant to 
-human capital management and scholarly inquiry on employee mobility in contemporary labor markets. Beyond validating the predictive power 
-of job posting content for selection, our analysis unveils rich possibilities for future scholarly inquiry and the development of 
+\begin{abstract}
+Information embedded within job postings is increasingly central to modern labor markets, serving not only potential employees but also powering
+matching algorithms, screening tools, and broader workforce analytics. This growing reliance necessitates a thorough validation of skill and job requirement
+measures derived from job posting content. We provide the first empirical validation of this informativeness by predicting selection for internal jobs within
+a major firm using a novel measure of skill distance constructed solely from job postings. Our analysis reveals that job posting-derived skill distances
+strongly predict selection outcomes: the probability of selection is 84\% higher when the sought job is in the lowest quintile of skill distance
+compared to a position in the highest quintile. Furthermore, in 70\% of cases where multiple candidates applied, the selected candidate
+was the one with the shortest skill distance. Notably, these posting-derived skill measures consistently outperform traditional employee
+characteristics in explaining selection decisions. Building on this validation, we demonstrate how internal application intensity is
+significantly correlated with the average skill distance to emerging opportunities, yielding novel insights directly relevant to
+human capital management and scholarly inquiry on employee mobility in contemporary labor markets. Beyond validating the predictive power
+of job posting content for selection, our analysis unveils rich possibilities for future scholarly inquiry and the development of
 advanced analytics leveraging the readily available and informative skill content within job postings.
+\end{abstract}
 
 \end{titlepage}
 
@@ -50,6 +50,5 @@ advanced analytics leveraging the readily available and informative skill conten
 \input{sections/discussion}
 
 \bibliography{\bib}
-
 
 \end{document} 
