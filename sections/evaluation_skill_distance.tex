@@ -1,12 +1,19 @@
 
 \section{Evaluation: Does Skill Distance Predict Selection?}\label{sec:evaluation_skill_distance}
 
-This section evaluates whether our job postings based skill-distance measure meaningfully captures skill requirements by testing how well our derived distance metric predicts 
-selection of internal candidates for new positions. Our test set comprises 308 cases where internal applicants applied to vacancies (approximately 25\% of our total cases). 
-We examine whether skill distances computed purely from posting content capture predictable variation in selection outcomes. It's important to note that the information 
-contained in an applicant's job description ($j_c$) may not fully capture the skills and abilities of that position, let alone those of the candidate. This potential measurement 
-loss informs our approach. Our primary interest lies in understanding the extent to which posting content predicts selection, and in assessing the relative contribution of the 
-skill distance measure compared to a few other observed features.
+This section evaluates whether our job postings based skill-distance measure meaningfully captures skill requirements by testing how well 
+our derived distance metric predicts selection of internal candidates for new positions. Our primary interest lies in understanding the 
+extent to which posting content predicts selection, and in assessing the relative contribution of the skill distance measure compared to 
+a few other observed features. While an Area Under the Curve (AUC) of 0.62 might appear modest in a traditional classification setting, 
+the key contribution of this section is demonstrating the surprisingly rich and informative signal captured by a distance metric derived 
+solely from job posting content. Even with this level of predictive power, we reveal that job postings contain substantial information 
+about the skills relevant to selection decisions.
+
+Our test set comprises 308 cases where internal applicants applied to vacancies (approximately 25\% of our total cases). 
+We examine whether skill distances computed purely from posting content capture predictable variation in selection outcomes. 
+It's important to note that the information contained in an applicant's job description ($j_c$) may not fully capture the skills 
+and abilities of that position, let alone those of the candidate. This potential measurement loss informs our approach.
+ 
 
 \subsection{Skill Distance and Selection Probability}
 
@@ -41,8 +48,10 @@ significant \((\beta_1 = -0.3268, \, p < 0.01)\), indicating that applicants wit
     \label{tab:logistic_regression}
 \end{table}
 
-The regression suggests that, on average, an applicant-vacancy pair in the lowest skill distance quintile has an 84\% higher probability of selection compared to a pair in 
-the highest quintile. \autoref{fig:skill_distance_probability} illustrates the association between skill distance quintile and predicted selection probability.
+The regression suggests that, on average, an applicant-vacancy pair in the lowest skill distance quintile has an 84\% 
+higher probability of selection compared to a pair in the highest quintile. This substantial difference in selection 
+probability across skill distance quintiles strongly suggests that our posting-derived metric is effectively capturing 
+informative variations in the skill alignment between applicants and vacancies.
 
 
 \begin{figure}[h]
@@ -101,10 +110,11 @@ applicants within the same vacancy. Together, these findings highlight the relev
     \label{tab:within_vacancy}
 \end{table}
 
-This within-vacancy analysis strengthens our confidence that skill distance is a crucial factor in differentiating among applicants, rather than merely reflecting individual 
-selection probabilities. These results underscore the relevance and importance of the skill distance measure in the selection process. 
 
 
+These results underscore the relevance and importance of the skill distance measure in the selection process. 
+Crucially, the ability of skill distance to differentiate between candidates applying for the same position highlights 
+the fine-grained informativeness embedded within job postings regarding the specific requirements of that role.
 
 \subsubsection{Within Applicant Selection}
 
@@ -192,9 +202,15 @@ To assess the relative importance of the skill distance measure  we employ Rando
 \end{table}
 
 
-The full model, which includes skill distance, achieves an AUC of 0.600, while the model without skill distance yields an AUC of 0.500 - equivalent to a classifier with no predictive ability. This stark contrast in performance underscores the remarkable predictive power of the skill distance measure in internal selection processes. Despite the clear variation in other observed features such as tenure, total experience, job categories, and proficiency ratings, skill distance alone accounts for nearly all predictable variation in selection outcomes. Among this set of observed features, the skill distance measure between an applicant's current job and the sought vacancy contributes virtually all the predictive power for selection decisions in our setting.
-
-This finding is particularly noteworthy given that we derived our measure from job descriptions, which are generally less sensitive than other HR data. While firms often possess additional potentially predictive features, these may be subject to privacy concerns or legal restrictions. Our approach demonstrates that valuable insights can be derived from less sensitive data sources, advancing the field of people analytics while maintaining ethical data practices. Moreover, the granularity of our skill distance measure appears to capture nuanced differences between roles that categorical variables like performance ratings may miss, especially when applicants cluster in just one or two groups.
 
 
-The significant predictive power of our analysis validates that job postings contain meaningful information about position requirements and worker-job fit. While firms often possess additional potentially predictive features, our results demonstrate that posting content alone captures substantial signal about skill requirements. That this prediction comes from job descriptions, which are generally less sensitive than other HR data, suggests postings are an underutilized source of information about skill requirements in labor markets. This validation of posting informativeness through selection outcomes supports their growing use in labor market analytics and tools while highlighting opportunities for deeper analysis of skill requirements and worker-job matching. 
+The full model, which includes skill distance, achieves an AUC of 0.600, while the model without skill distance yields an AUC of 0.500 - equivalent to 
+a classifier with no predictive ability. This dramatic difference in performance powerfully illustrates the substantial informative content captured by 
+the skill distance measure. Despite the clear variation in other observed features such as tenure, total experience, job categories, and proficiency 
+ratings, skill distance alone accounts for nearly all predictable variation in selection outcomes.
+
+This finding is particularly noteworthy given that we derived our measure from job descriptions, which are generally less sensitive than other HR data. 
+While firms often possess additional potentially predictive features, these may be subject to privacy concerns or legal restrictions. Our approach demonstrates 
+that valuable insights can be derived from less sensitive data sources, advancing the field of people analytics while maintaining ethical data practices. Moreover, 
+the granularity of our skill distance measure appears to capture nuanced differences between roles that categorical variables like performance ratings may miss, 
+especially when applicants cluster in just one or two groups.
